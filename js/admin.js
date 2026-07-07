@@ -347,7 +347,7 @@ function renderLeads() {
   if (filteredLeads.length === 0) {
     leadsTableBody.innerHTML = `
       <tr>
-        <td colspan="6" class="empty-state">No registrations found.</td>
+        <td colspan="7" class="empty-state">No registrations found.</td>
       </tr>
     `;
     return;
@@ -355,12 +355,14 @@ function renderLeads() {
 
   leadsTableBody.innerHTML = filteredLeads.map(lead => {
     const date = lead.createdAt ? new Date(lead.createdAt.seconds * 1000).toLocaleDateString() : "Pending";
+    const visitDate = lead.visitDate ? lead.visitDate : "Not Selected";
     return `
       <tr>
         <td>${date}</td>
         <td class="lead-name">${escapeHTML(lead.name)}</td>
         <td class="lead-phone">${escapeHTML(lead.phone)}</td>
         <td>${escapeHTML(lead.club)}</td>
+        <td style="font-weight: 600; color: var(--ember-2);">${escapeHTML(visitDate)}</td>
         <td>
           <span class="status-badge status-${lead.status.toLowerCase()}">${lead.status}</span>
         </td>

@@ -34,12 +34,14 @@ form.addEventListener('submit', async (e) => {
   const nameInput = form.querySelector('input[type="text"]');
   const phoneInput = form.querySelector('input[type="tel"]');
   const clubSelect = form.querySelector('select');
+  const dateInput = form.querySelector('input[type="date"]');
   const submitBtn = form.querySelector('button[type="submit"]');
 
   const leadData = {
     name: nameInput.value.trim(),
     phone: phoneInput.value.trim(),
     club: clubSelect.value,
+    visitDate: dateInput.value,
     status: 'New',
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   };
