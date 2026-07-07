@@ -30,6 +30,7 @@ const statContacted = document.getElementById("statContacted");
 const statJoined = document.getElementById("statJoined");
 
 let leads = []; // Local cache of leads
+let members = []; // Local cache of gym members
 let currentFilter = "all";
 let searchQuery = "";
 
@@ -41,6 +42,8 @@ auth.onAuthStateChanged((user) => {
       // Admin Access
       showAdminDashboard();
       subscribeToLeads();
+      subscribeToMembers();
+      setupSidebarTabs();
     } else {
       // Normal User Access
       showUserDashboard(user);
@@ -93,7 +96,7 @@ function showError(msg) {
 function showAdminDashboard() {
   authContainer.style.display = "none";
   userDashboardContainer.style.display = "none";
-  dashboardContainer.style.display = "block";
+  dashboardContainer.style.display = "flex"; // flex for sidebar layout
   adminHeader.style.display = "block";
 }
 
@@ -120,7 +123,28 @@ function showLogin() {
   adminHeader.style.display = "none";
 }
 
-// Real-time Database Subscription
+// Sidebar Tab Toggling
+function setupSidebarTabs() {
+  const tabBtns = document.querySelectorAll(".sidebar-tab-btn");
+  const tabContents = document.querySelectorAll(".admin-tab-content");
+
+  tabBtns.forEach(btn => {
+    // Clean listener cloning to avoid duplicate bindings
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+    newBtn.addEventListener("click", () => {
+      const allBtns = document.querySelectorAll(".sidebar-tab-btn");
+      allBtns.forEach(b => b.classList.remove("active"));
+      tabContents.forEach(c => c.classList.remove("active"));
+
+      newBtn.classList.add("active");
+      const targetTab = newBtn.getAttribute("data-tab");
+      document.getElementById(`tab-${targetTab}`).classList.add("active");
+    });
+  });
+}
+
+// Real-time Leads subscription
 let unsubscribeLeads = null;
 function subscribeToLeads() {
   if (unsubscribeLeads) unsubscribeLeads();
@@ -135,36 +159,182 @@ function subscribeToLeads() {
           ...doc.data()
         });
       });
-      updateStats();
       renderLeads();
     }, (error) => {
-      console.error("Firestore subscription error:", error);
+      console.error("Firestore leads subscription error:", error);
     });
 }
 
-// Update Dashboard Statistics Cards
-function updateStats() {
-  const total = leads.length;
-  const newLeads = leads.filter(l => l.status === "New").length;
-  const contacted = leads.filter(l => l.status === "Contacted").length;
-  const joined = leads.filter(l => l.status === "Joined").length;
+// Real-time Members subscription
+let unsubscribeMembers = null;
+function subscribeToMembers() {
+  if (unsubscribeMembers) unsubscribeMembers();
 
-  statTotal.textContent = total;
-  statNew.textContent = newLeads;
-  statContacted.textContent = contacted;
-  statJoined.textContent = joined;
+  // Load members
+  unsubscribeMembers = db.collection("members")
+    .orderBy("createdAt", "desc")
+    .onSnapshot((snapshot) => {
+      members = [];
+      snapshot.forEach((doc) => {
+        members.push({
+          id: doc.id,
+          ...doc.data()
+        });
+      });
+      renderMembers();
+    }, (error) => {
+      console.error("Firestore members subscription error:", error);
+    });
 }
+
+// Render members into Active vs Expiring (near end)
+function renderMembers() {
+  const activeBody = document.getElementById("activeMembersTableBody");
+  const expiringBody = document.getElementById("expiringMembersTableBody");
+
+  if (!activeBody || !expiringBody) return;
+
+  const activeRows = [];
+  const expiringRows = [];
+
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  members.forEach(member => {
+    // Calculate expiration date
+    const start = new Date(member.startDate);
+    const durationMonths = parseInt(member.duration);
+    const expiry = new Date(start);
+    expiry.setMonth(expiry.getMonth() + durationMonths);
+    
+    // Calculate difference in days
+    const diffTime = expiry.getTime() - today.getTime();
+    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+
+    const tr = `
+      <tr>
+        <td class="lead-name">${escapeHTML(member.name)}</td>
+        <td>${member.age} / ${member.gender}</td>
+        <td>
+          <div class="lead-phone">${escapeHTML(member.phone)}</div>
+          <div style="font-size: 11px; color: var(--muted);">${escapeHTML(member.address || 'No address')}</div>
+        </td>
+        <td>${member.startDate}</td>
+        <td>${member.duration} Month${member.duration > 1 ? 's' : ''}</td>
+        <td>
+          <span style="font-weight: 700; color: ${daysLeft < 30 ? 'var(--error)' : 'var(--success)'}">
+            ${daysLeft > 0 ? daysLeft + ' Days Left' : (daysLeft === 0 ? 'Expires Today' : 'Expired')}
+          </span>
+        </td>
+        <td>₹${parseInt(member.fees).toLocaleString()}</td>
+        <td>
+          <button class="btn-delete" style="margin: 0;" onclick="deleteMember('${member.id}')">Remove</button>
+        </td>
+      </tr>
+    `;
+
+    // Move to near to end if days remaining is < 30
+    if (daysLeft < 30) {
+      expiringRows.push(tr);
+    } else {
+      activeRows.push(tr);
+    }
+  });
+
+  // Populate Active table
+  if (activeRows.length === 0) {
+    activeBody.innerHTML = `<tr><td colspan="8" class="empty-state">No active members with >= 30 days left.</td></tr>`;
+  } else {
+    activeBody.innerHTML = activeRows.join('');
+  }
+
+  // Populate Expiring table
+  if (expiringRows.length === 0) {
+    expiringBody.innerHTML = `<tr><td colspan="8" class="empty-state">No expiring members with < 30 days left.</td></tr>`;
+  } else {
+    expiringBody.innerHTML = expiringRows.join('');
+  }
+}
+
+// Add Member Form submission
+const addMemberForm = document.getElementById("addMemberForm");
+const memberFormNote = document.getElementById("memberFormNote");
+
+if (addMemberForm) {
+  addMemberForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    memberFormNote.textContent = "";
+
+    const name = document.getElementById("mName").value.trim();
+    const phone = document.getElementById("mPhone").value.trim();
+    const age = parseInt(document.getElementById("mAge").value);
+    const gender = document.getElementById("mGender").value;
+    const startDate = document.getElementById("mStartDate").value;
+    const duration = document.getElementById("mDuration").value;
+    const fees = parseFloat(document.getElementById("mFees").value);
+    const address = document.getElementById("mAddress").value.trim();
+
+    const memberData = {
+      name,
+      phone,
+      age,
+      gender,
+      startDate,
+      duration,
+      fees,
+      address,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp()
+    };
+
+    try {
+      const submitBtn = addMemberForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = "Registering...";
+
+      await db.collection("members").add(memberData);
+
+      memberFormNote.style.color = "var(--success)";
+      memberFormNote.textContent = "Member registered successfully!";
+      addMemberForm.reset();
+      
+      // Switch to active members list tab
+      setTimeout(() => {
+        const activeTabBtn = document.querySelector('[data-tab="active-members"]');
+        if (activeTabBtn) activeTabBtn.click();
+        memberFormNote.textContent = "";
+      }, 1500);
+    } catch (error) {
+      console.error("Error registering member:", error);
+      memberFormNote.style.color = "var(--error)";
+      memberFormNote.textContent = "Failed to register member. Check Firestore rules.";
+    } finally {
+      const submitBtn = addMemberForm.querySelector('button[type="submit"]');
+      submitBtn.disabled = false;
+      submitBtn.textContent = "Register Member";
+    }
+  });
+}
+
+// Delete member from Firestore
+window.deleteMember = async function(id) {
+  if (confirm("Are you sure you want to remove this member?")) {
+    try {
+      await db.collection("members").doc(id).delete();
+    } catch (error) {
+      console.error("Error removing member:", error);
+      alert("Failed to remove member. Check permissions.");
+    }
+  }
+};
 
 // Render Leads Table with filtering & searching
 function renderLeads() {
   let filteredLeads = leads;
 
-  // Filter status
   if (currentFilter !== "all") {
     filteredLeads = filteredLeads.filter(l => l.status === currentFilter);
   }
 
-  // Filter search query
   if (searchQuery) {
     const q = searchQuery.toLowerCase();
     filteredLeads = filteredLeads.filter(l => 

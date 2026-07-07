@@ -78,6 +78,12 @@ service cloud.firestore {
       // Only the authorized admin email can view, edit, or delete leads
       allow read, write: if request.auth != null && request.auth.token.email == 'nikhil2005114@gmail.com';
     }
+
+    // Rules for members collection
+    match /members/{memberId} {
+      // Only the authorized admin email can read/write member records
+      allow read, write: if request.auth != null && request.auth.token.email == 'nikhil2005114@gmail.com';
+    }
   }
 }
 

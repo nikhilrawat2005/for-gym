@@ -13,7 +13,10 @@
   <!-- ADMIN HEADER (Hidden before login, shown dynamically) -->
   <header class="admin-header" id="adminHeader" style="display: none;">
     <div class="header-inner">
-      <a href="#" class="logo">FORGE<span>.</span> Admin</a>
+      <div style="display: flex; align-items: center; gap: 24px;">
+        <a href="#" class="logo">FORGE<span>.</span> Admin</a>
+        <a href="index.html" class="btn-signout" style="text-decoration: none; padding: 6px 12px; font-size: 11px;">← Back to Site</a>
+      </div>
       <div class="user-info">
         <span class="user-email" id="currentUserEmail"></span>
         <button class="btn-signout" id="signOutBtn">Sign Out</button>
@@ -56,68 +59,176 @@
   </main>
 
   <!-- DASHBOARD SCREEN (Shown after authorized login) -->
-  <main class="dashboard-container" id="dashboardContainer">
-    <div class="dashboard-header">
-      <div>
-        <p class="eyebrow" style="color: var(--ember); font-weight:700; font-size:12px; letter-spacing:3px;">OVERVIEW</p>
-        <h2>Lead Registrations</h2>
-      </div>
-    </div>
+  <main class="dashboard-container" id="dashboardContainer" style="display: none;">
+    <!-- SIDEBAR -->
+    <aside class="admin-sidebar">
+      <nav class="sidebar-nav">
+        <button class="sidebar-tab-btn active" data-tab="active-members">
+          <span class="tab-indicator green"></span> Active Members
+        </button>
+        <button class="sidebar-tab-btn" data-tab="expiring-members">
+          <span class="tab-indicator red"></span> Expiring Soon
+        </button>
+        <button class="sidebar-tab-btn" data-tab="add-member">
+          Add Member Form
+        </button>
+        <button class="sidebar-tab-btn" data-tab="leads-list">
+          Web Lead Submissions
+        </button>
+      </nav>
+    </aside>
 
-    <!-- STATS -->
-    <div class="dashboard-stats">
-      <div class="stat-card">
-        <span>Total Registrations</span>
-        <h3 id="statTotal">0</h3>
+    <!-- MAIN BODY CONTENT -->
+    <section class="admin-main-content">
+      
+      <!-- TAB 1: ACTIVE MEMBERS -->
+      <div class="admin-tab-content active" id="tab-active-members">
+        <h2 class="tab-title">Active Members (>= 30 days left)</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Age/Gender</th>
+                <th>Contact</th>
+                <th>Starting Date</th>
+                <th>Duration</th>
+                <th>Days Left</th>
+                <th>Fees</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="activeMembersTableBody">
+              <tr><td colspan="8" class="empty-state">Loading members...</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="stat-card">
-        <span>New Leads</span>
-        <h3 id="statNew">0</h3>
-      </div>
-      <div class="stat-card">
-        <span>Contacted</span>
-        <h3 id="statContacted">0</h3>
-      </div>
-      <div class="stat-card">
-        <span>Joined Member</span>
-        <h3 id="statJoined">0</h3>
-      </div>
-    </div>
 
-    <!-- SEARCH & FILTERS -->
-    <div class="table-controls">
-      <div class="search-wrapper">
-        <input type="text" class="search-input" id="searchBar" placeholder="Search by name, phone, or club...">
+      <!-- TAB 2: EXPIRING MEMBERS (NEAR TO END) -->
+      <div class="admin-tab-content" id="tab-expiring-members">
+        <h2 class="tab-title" style="color: var(--error);">Expiring Soon (< 30 days left)</h2>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Name</th>
+                <th>Age/Gender</th>
+                <th>Contact</th>
+                <th>Starting Date</th>
+                <th>Duration</th>
+                <th>Days Left</th>
+                <th>Fees</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="expiringMembersTableBody">
+              <tr><td colspan="8" class="empty-state">No members near plan end date.</td></tr>
+            </tbody>
+          </table>
+        </div>
       </div>
-      <div class="filter-wrapper">
-        <button class="filter-btn active" data-filter="all">All Leads</button>
-        <button class="filter-btn" data-filter="New">New</button>
-        <button class="filter-btn" data-filter="Contacted">Contacted</button>
-        <button class="filter-btn" data-filter="Joined">Joined</button>
-      </div>
-    </div>
 
-    <!-- DATA TABLE -->
-    <div class="table-wrapper">
-      <table id="leadsTable">
-        <thead>
-          <tr>
-            <th>Date</th>
-            <th>Name</th>
-            <th>Phone</th>
-            <th>Preferred Club</th>
-            <th>Status</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
-        <tbody id="leadsTableBody">
-          <!-- Populated dynamically -->
-          <tr>
-            <td colspan="6" class="empty-state">Loading registrations...</td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
+      <!-- TAB 3: ADD MEMBER FORM -->
+      <div class="admin-tab-content" id="tab-add-member">
+        <h2 class="tab-title">Register New Member</h2>
+        <form class="member-form" id="addMemberForm">
+          <div class="form-row">
+            <div class="form-group">
+              <label>Full Name *</label>
+              <input type="text" id="mName" placeholder="John Doe" required>
+            </div>
+            <div class="form-group">
+              <label>Phone Number *</label>
+              <input type="tel" id="mPhone" placeholder="9876543210" required>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Age *</label>
+              <input type="number" id="mAge" placeholder="24" min="10" max="100" required>
+            </div>
+            <div class="form-group">
+              <label>Gender *</label>
+              <select id="mGender" required>
+                <option value="" disabled selected>Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Plan Start Date *</label>
+              <input type="date" id="mStartDate" required>
+            </div>
+            <div class="form-group">
+              <label>Duration *</label>
+              <select id="mDuration" required>
+                <option value="" disabled selected>Select Duration</option>
+                <option value="1">1 Month</option>
+                <option value="3">3 Months</option>
+                <option value="6">6 Months</option>
+                <option value="12">12 Months</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label>Fees Paid (INR) *</label>
+              <input type="number" id="mFees" placeholder="2500" required>
+            </div>
+            <div class="form-group">
+              <label>Address (Optional)</label>
+              <input type="text" id="mAddress" placeholder="123 Street Name, City">
+            </div>
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="margin-top: 12px; border: none; cursor: pointer;">Register Member</button>
+          <p id="memberFormNote" style="margin-top: 12px; font-weight:600;"></p>
+        </form>
+      </div>
+
+      <!-- TAB 4: WEB LEAD SUBMISSIONS -->
+      <div class="admin-tab-content" id="tab-leads-list">
+        <h2 class="tab-title">Web Lead Submissions</h2>
+        <div class="table-controls" style="border-radius: 4px 4px 0 0;">
+          <div class="search-wrapper">
+            <input type="text" class="search-input" id="searchBar" placeholder="Search leads...">
+          </div>
+          <div class="filter-wrapper">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="New">New</button>
+            <button class="filter-btn" data-filter="Contacted">Contacted</button>
+            <button class="filter-btn" data-filter="Joined">Joined</button>
+          </div>
+        </div>
+        <div class="table-wrapper">
+          <table id="leadsTable">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Name</th>
+                <th>Phone</th>
+                <th>Preferred Club</th>
+                <th>Status</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="leadsTableBody">
+              <tr>
+                <td colspan="6" class="empty-state">Loading registrations...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+    </section>
   </main>
 
   <!-- USER PORTAL SCREEN (Shown for normal users after login) -->
