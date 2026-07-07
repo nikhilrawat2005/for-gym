@@ -10,6 +10,10 @@ const googleSignInBtn = document.getElementById("googleSignInBtn");
 const signOutBtn = document.getElementById("signOutBtn");
 const errorMessage = document.getElementById("errorMessage");
 
+const emailLoginForm = document.getElementById("emailLoginForm");
+const loginEmail = document.getElementById("loginEmail");
+const loginPassword = document.getElementById("loginPassword");
+
 const leadsTableBody = document.getElementById("leadsTableBody");
 const searchBar = document.getElementById("searchBar");
 const filterBtns = document.querySelectorAll(".filter-btn");
@@ -40,6 +44,21 @@ auth.onAuthStateChanged((user) => {
     // Signed out
     showLogin();
   }
+});
+
+// Email & Password Sign-In Handler
+emailLoginForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  errorMessage.style.display = "none";
+
+  const email = loginEmail.value.trim();
+  const password = loginPassword.value;
+
+  auth.signInWithEmailAndPassword(email, password)
+    .catch((error) => {
+      console.error("Sign-in error:", error);
+      showError(error.message);
+    });
 });
 
 // Google Sign-In Handler

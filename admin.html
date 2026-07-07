@@ -27,12 +27,31 @@
       <h1>FORGE FITNESS</h1>
       <p>Authorized access only. Sign in to view and manage gym registrations.</p>
       
-      <button class="btn-google" id="googleSignInBtn">
+      <!-- Email/Password Sign-In -->
+      <form id="emailLoginForm" style="margin-bottom: 24px; text-align: left;">
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; letter-spacing: 1px;">Admin Email</label>
+          <input type="email" id="loginEmail" placeholder="email@example.com" required style="width: 100%; background: var(--panel); border: 1px solid var(--line); padding: 12px 16px; color: var(--paper); border-radius: 2px; font-size: 14px; outline: none; transition: border-color 0.2s;">
+        </div>
+        <div style="margin-bottom: 20px;">
+          <label style="display: block; font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--muted); margin-bottom: 8px; letter-spacing: 1px;">Password</label>
+          <input type="password" id="loginPassword" placeholder="••••••••" required style="width: 100%; background: var(--panel); border: 1px solid var(--line); padding: 12px 16px; color: var(--paper); border-radius: 2px; font-size: 14px; outline: none; transition: border-color 0.2s;">
+        </div>
+        <button type="submit" class="btn-google" style="background: var(--ember); color: var(--ink); border: none; font-weight: 700; width: 100%; padding: 14px; margin-bottom: 8px;">Sign In with Password</button>
+      </form>
+
+      <div style="display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; color: var(--muted); font-size: 11px; text-transform: uppercase; font-weight: 700; letter-spacing: 1px;">
+        <span style="flex: 1; height: 1px; background: var(--line);"></span>
+        <span>Or</span>
+        <span style="flex: 1; height: 1px; background: var(--line);"></span>
+      </div>
+
+      <button class="btn-google" id="googleSignInBtn" style="background: var(--paper); color: var(--ink); width: 100%;">
         <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
         Sign in with Google
       </button>
 
-      <div class="auth-message error" id="errorMessage" style="display: none;"></div>
+      <div class="auth-message error" id="errorMessage" style="display: none; margin-top: 20px;"></div>
     </div>
   </main>
 
