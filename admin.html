@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FORGE FITNESS — Admin Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+<body>
+
+  <!-- ADMIN HEADER (Hidden before login, shown dynamically) -->
+  <header class="admin-header" id="adminHeader" style="display: none;">
+    <div class="header-inner">
+      <a href="#" class="logo">FORGE<span>.</span> Admin</a>
+      <div class="user-info">
+        <span class="user-email" id="currentUserEmail"></span>
+        <button class="btn-signout" id="signOutBtn">Sign Out</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- AUTH SCREEN (Shown before login) -->
+  <main class="auth-container" id="authContainer">
+    <div class="auth-card">
+      <h1>FORGE FITNESS</h1>
+      <p>Authorized access only. Sign in to view and manage gym registrations.</p>
+      
+      <button class="btn-google" id="googleSignInBtn">
+        <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google Logo">
+        Sign in with Google
+      </button>
+
+      <div class="auth-message error" id="errorMessage" style="display: none;"></div>
+    </div>
+  </main>
+
+  <!-- DASHBOARD SCREEN (Shown after authorized login) -->
+  <main class="dashboard-container" id="dashboardContainer">
+    <div class="dashboard-header">
+      <div>
+        <p class="eyebrow" style="color: var(--ember); font-weight:700; font-size:12px; letter-spacing:3px;">OVERVIEW</p>
+        <h2>Lead Registrations</h2>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div class="dashboard-stats">
+      <div class="stat-card">
+        <span>Total Registrations</span>
+        <h3 id="statTotal">0</h3>
+      </div>
+      <div class="stat-card">
+        <span>New Leads</span>
+        <h3 id="statNew">0</h3>
+      </div>
+      <div class="stat-card">
+        <span>Contacted</span>
+        <h3 id="statContacted">0</h3>
+      </div>
+      <div class="stat-card">
+        <span>Joined Member</span>
+        <h3 id="statJoined">0</h3>
+      </div>
+    </div>
+
+    <!-- SEARCH & FILTERS -->
+    <div class="table-controls">
+      <div class="search-wrapper">
+        <input type="text" class="search-input" id="searchBar" placeholder="Search by name, phone, or club...">
+      </div>
+      <div class="filter-wrapper">
+        <button class="filter-btn active" data-filter="all">All Leads</button>
+        <button class="filter-btn" data-filter="New">New</button>
+        <button class="filter-btn" data-filter="Contacted">Contacted</button>
+        <button class="filter-btn" data-filter="Joined">Joined</button>
+      </div>
+    </div>
+
+    <!-- DATA TABLE -->
+    <div class="table-wrapper">
+      <table id="leadsTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Name</th>
+            <th>Phone</th>
+            <th>Preferred Club</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="leadsTableBody">
+          <!-- Populated dynamically -->
+          <tr>
+            <td colspan="6" class="empty-state">Loading registrations...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Firebase Core + Auth + Firestore compat SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+  
+  <!-- Firebase initialization & Admin logic -->
+  <script src="js/firebase-config.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>
