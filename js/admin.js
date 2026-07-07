@@ -103,8 +103,8 @@ function showAdminDashboard() {
 function showUserDashboard(user) {
   authContainer.style.display = "none";
   dashboardContainer.style.display = "none";
-  userDashboardContainer.style.display = "block";
-  adminHeader.style.display = "block";
+  userDashboardContainer.style.display = "flex";
+  adminHeader.style.display = "none"; // Normal users get Back/SignOut buttons inside their card
 
   // Set user details
   userName.textContent = user.displayName || "Forge Gym Member";

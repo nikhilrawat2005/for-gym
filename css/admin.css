@@ -544,3 +544,8 @@ tr:hover td {
   }
 }
 
+/* User Portal centering layout */
+#userDashboardContainer {
+  flex: 1;
+  min-height: calc(100vh - 80px);
+}

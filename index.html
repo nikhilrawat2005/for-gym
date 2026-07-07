@@ -7,6 +7,156 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="css/style.css">
+<style>
+  /* Sign-In Modal */
+  .signin-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.75);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+  }
+  .signin-modal-overlay.open { display: flex; }
+  .signin-modal {
+    background: #17140f;
+    border: 1px solid rgba(244,239,228,0.12);
+    border-radius: 8px;
+    padding: 48px 40px;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.7);
+    animation: modalIn 0.25s ease;
+  }
+  @keyframes modalIn {
+    from { opacity: 0; transform: translateY(-20px) scale(0.97); }
+    to   { opacity: 1; transform: translateY(0) scale(1); }
+  }
+  .signin-modal h2 {
+    font-family: 'Bebas Neue', Impact, sans-serif;
+    font-size: 36px;
+    letter-spacing: 1px;
+    margin-bottom: 6px;
+  }
+  .signin-modal h2 span { color: #ff5a1f; }
+  .signin-modal p.sub { color: #a89e8c; font-size: 14px; margin-bottom: 28px; }
+  .signin-modal .close-btn {
+    position: absolute; top: 16px; right: 20px;
+    background: none; border: none; color: #a89e8c;
+    font-size: 22px; cursor: pointer; line-height: 1;
+  }
+  .signin-modal .close-btn:hover { color: #f4efe4; }
+  .signin-modal .modal-input {
+    width: 100%; background: #1f1b15;
+    border: 1px solid rgba(244,239,228,0.12);
+    padding: 12px 16px; color: #f4efe4;
+    border-radius: 4px; font-size: 14px;
+    outline: none; margin-bottom: 12px;
+    transition: border-color 0.2s;
+  }
+  .signin-modal .modal-input:focus { border-color: #ff5a1f; }
+  .signin-modal .modal-input::placeholder { color: #a89e8c; }
+  .signin-modal .modal-label {
+    display: block; font-size: 11px; text-transform: uppercase;
+    font-weight: 700; color: #a89e8c; margin-bottom: 6px;
+    letter-spacing: 1px;
+  }
+  .signin-modal .btn-email-signin {
+    width: 100%; padding: 14px;
+    background: #ff5a1f; border: none;
+    color: white; font-weight: 700;
+    font-size: 14px; text-transform: uppercase;
+    letter-spacing: 1px; border-radius: 4px;
+    cursor: pointer; margin-bottom: 16px;
+    transition: opacity 0.2s;
+  }
+  .signin-modal .btn-email-signin:hover { opacity: 0.88; }
+  .signin-modal .divider {
+    display: flex; align-items: center; gap: 12px;
+    color: #a89e8c; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: 1px;
+    margin-bottom: 16px;
+  }
+  .signin-modal .divider::before,
+  .signin-modal .divider::after {
+    content: ''; flex: 1;
+    height: 1px; background: rgba(244,239,228,0.12);
+  }
+  .signin-modal .btn-google-signin {
+    width: 100%; padding: 14px;
+    background: #f4efe4; border: none;
+    color: #0e0d0c; font-weight: 700;
+    font-size: 14px; text-transform: uppercase;
+    letter-spacing: 1px; border-radius: 4px;
+    cursor: pointer; display: flex;
+    align-items: center; justify-content: center;
+    gap: 12px; transition: background 0.2s;
+  }
+  .signin-modal .btn-google-signin:hover { background: #fff; }
+  .signin-modal .btn-google-signin img { width: 20px; height: 20px; }
+  .modal-error {
+    color: #f44336; font-size: 13px;
+    margin-top: 12px; display: none;
+    background: rgba(244,67,54,0.1);
+    border: 1px solid rgba(244,67,54,0.25);
+    padding: 10px 14px; border-radius: 4px;
+  }
+  /* Nav Auth area */
+  .nav-auth { display: flex; align-items: center; gap: 12px; }
+  .nav-user-chip {
+    display: flex; align-items: center; gap: 10px;
+    background: rgba(244,239,228,0.06);
+    border: 1px solid rgba(244,239,228,0.12);
+    border-radius: 50px;
+    padding: 5px 14px 5px 6px;
+    cursor: pointer;
+    transition: border-color 0.2s;
+  }
+  .nav-user-chip:hover { border-color: rgba(255,90,31,0.5); }
+  .nav-user-chip img {
+    width: 30px; height: 30px;
+    border-radius: 50%; object-fit: cover;
+    border: 2px solid #ff5a1f;
+  }
+  .nav-user-chip span {
+    font-size: 13px; font-weight: 600;
+    color: #f4efe4; max-width: 100px;
+    overflow: hidden; text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .nav-signout-btn {
+    background: transparent;
+    border: 1px solid rgba(244,239,228,0.2);
+    color: #a89e8c; font-size: 12px;
+    font-weight: 700; text-transform: uppercase;
+    letter-spacing: 1px; padding: 7px 14px;
+    border-radius: 4px; cursor: pointer;
+    transition: all 0.2s;
+  }
+  .nav-signout-btn:hover { border-color: #ff5a1f; color: #ff5a1f; }
+  #navAdminLink {
+    color: #ffb238; font-weight: 700;
+    text-decoration: none; font-size: 14px;
+    padding: 8px 16px;
+    border: 1px solid rgba(255,178,56,0.3);
+    border-radius: 4px;
+    transition: all 0.2s;
+    display: none;
+  }
+  #navAdminLink:hover { background: rgba(255,178,56,0.1); border-color: #ffb238; }
+  #navSignInBtn {
+    background: #ff5a1f; color: white;
+    border: none; padding: 9px 20px;
+    font-weight: 700; font-size: 13px;
+    text-transform: uppercase; letter-spacing: 1px;
+    border-radius: 4px; cursor: pointer;
+    transition: opacity 0.2s; display: flex;
+  }
+  #navSignInBtn:hover { opacity: 0.88; }
+</style>
 </head>
 <body>
 
@@ -20,8 +170,20 @@
       <a href="#plans">Membership</a>
       <a href="#results">Results</a>
       <a href="#locations">Locations</a>
-      <a href="admin.html" style="color: var(--ember-2); font-weight: 700;">Member Portal</a>
     </nav>
+    <!-- Dynamic Auth Nav Area -->
+    <div class="nav-auth" id="navAuthArea">
+      <!-- State 1: Not logged in -->
+      <button id="navSignInBtn">Sign In</button>
+      <!-- State 2: Admin user -->
+      <a href="admin.html" id="navAdminLink">⚙ Admin Panel</a>
+      <!-- State 3: Normal user chip -->
+      <div class="nav-user-chip" id="navUserChip" style="display:none;">
+        <img id="navUserPhoto" src="" alt="Profile">
+        <span id="navUserName"></span>
+      </div>
+      <button class="nav-signout-btn" id="navSignOutBtn" style="display:none;">Sign Out</button>
+    </div>
     <a href="#plans" class="btn btn-primary nav-cta">Join Now</a>
     <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
   </div>
@@ -298,8 +460,34 @@
   <p class="footer-bottom">© 2026 Forge Fitness. All rights reserved.</p>
 </footer>
 
+<!-- Sign-In Modal -->
+<div class="signin-modal-overlay" id="signinModalOverlay">
+  <div class="signin-modal">
+    <button class="close-btn" id="modalCloseBtn">&#x2715;</button>
+    <h2>FORGE<span>.</span></h2>
+    <p class="sub">Sign in to access your profile or the admin panel.</p>
+
+    <!-- Email/Password -->
+    <label class="modal-label" for="modalEmail">Email</label>
+    <input class="modal-input" type="email" id="modalEmail" placeholder="you@example.com">
+    <label class="modal-label" for="modalPassword">Password</label>
+    <input class="modal-input" type="password" id="modalPassword" placeholder="••••••••">
+    <button class="btn-email-signin" id="modalEmailSignInBtn">Sign In</button>
+
+    <div class="divider">or</div>
+
+    <button class="btn-google-signin" id="modalGoogleSignInBtn">
+      <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google">
+      Continue with Google
+    </button>
+
+    <div class="modal-error" id="modalError"></div>
+  </div>
+</div>
+
 <!-- Firebase SDKs Compat -->
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 <script src="js/firebase-config.js"></script>
 <script src="js/script.js"></script>

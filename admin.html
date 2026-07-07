@@ -233,22 +233,44 @@
   </main>
 
   <!-- USER PORTAL SCREEN (Shown for normal users after login) -->
-  <main class="dashboard-container" id="userDashboardContainer" style="display: none; max-width: 600px; margin: 40px auto; padding: 40px 32px; background: var(--charcoal); border: 1px solid var(--line); border-radius: 4px; text-align: center;">
-    <div style="margin-bottom: 24px;">
-      <img id="userPhoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" alt="Profile Picture" style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--ember); margin: 0 auto 16px; object-fit: cover;">
-      <h2 id="userName" style="font-family: var(--display); font-size: 36px; letter-spacing: 1px; margin-bottom: 4px;">Gym Member</h2>
-      <p id="userEmail" style="color: var(--muted); font-size: 14px;"></p>
-    </div>
-    <div style="border-top: 1px solid var(--line); padding-top: 24px; text-align: left;">
-      <h3 style="font-family: var(--display); font-size: 22px; letter-spacing: 0.5px; color: var(--ember-2); margin-bottom: 12px;">Your Club Status</h3>
-      <div style="background: var(--panel); border: 1px solid var(--line); padding: 16px; border-radius: 2px; display: flex; justify-content: space-between; align-items: center;">
-        <div>
-          <strong style="display: block; font-size: 15px;">Forge Access Level</strong>
-          <span style="font-size: 13px; color: var(--muted);">Standard Day Pass / Guest</span>
-        </div>
-        <span class="status-badge status-joined" style="font-size: 12px; padding: 6px 12px;">Active Member</span>
+  <main id="userDashboardContainer" style="display: none; flex: 1; align-items: center; justify-content: center; padding: 40px 24px;">
+    <div style="max-width: 560px; width: 100%; background: var(--charcoal); border: 1px solid var(--line); border-radius: 8px; overflow: hidden; box-shadow: 0 20px 60px rgba(0,0,0,0.6);">
+      
+      <!-- Profile Banner -->
+      <div style="background: linear-gradient(135deg, var(--ember) 0%, #ff8c42 50%, var(--ember-2) 100%); padding: 40px 32px; text-align: center; position: relative;">
+        <img id="userPhoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" alt="Profile Picture" 
+             style="width: 100px; height: 100px; border-radius: 50%; border: 4px solid white; object-fit: cover; box-shadow: 0 8px 24px rgba(0,0,0,0.4); margin-bottom: 16px;">
+        <h2 id="userName" style="font-family: var(--display); font-size: 32px; letter-spacing: 1px; color: white; text-shadow: 0 2px 8px rgba(0,0,0,0.3); margin-bottom: 4px;">Forge Member</h2>
+        <p id="userEmail" style="font-size: 13px; color: rgba(255,255,255,0.8); letter-spacing: 0.5px;"></p>
       </div>
-      <p style="margin-top: 20px; color: var(--muted); font-size: 13px; line-height: 1.5;">Welcome to Forge Fitness! Show this portal dashboard screen at the front desk when checking in to any club locations.</p>
+
+      <!-- Profile Body -->
+      <div style="padding: 32px;">
+        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--panel); border: 1px solid var(--line); border-radius: 6px; padding: 18px 20px; margin-bottom: 20px;">
+          <div>
+            <strong style="display: block; font-size: 15px; margin-bottom: 4px;">Forge Fitness Access</strong>
+            <span style="font-size: 13px; color: var(--muted);">Signed-in Member</span>
+          </div>
+          <span class="status-badge status-joined" style="font-size: 12px; padding: 6px 14px;">✓ Active</span>
+        </div>
+
+        <p style="color: var(--muted); font-size: 13px; line-height: 1.6; margin-bottom: 28px; text-align: center;">
+          Welcome to Forge Fitness! Show this screen at the front desk when checking in to any of our 40+ clubs.
+        </p>
+
+        <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+          <a href="index.html" style="flex: 1; text-align: center; padding: 12px 20px; background: transparent; border: 1px solid var(--line); color: var(--paper); font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; text-decoration: none; transition: all 0.2s;" 
+             onmouseover="this.style.borderColor='var(--ember)';this.style.color='var(--ember)'" 
+             onmouseout="this.style.borderColor='var(--line)';this.style.color='var(--paper)'">
+            ← Back to Site
+          </a>
+          <button id="userSignOutBtn" onclick="auth.signOut()" style="flex: 1; padding: 12px 20px; background: var(--ember); border: none; color: white; font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; border-radius: 4px; cursor: pointer; transition: opacity 0.2s;"
+             onmouseover="this.style.opacity='0.85'" onmouseout="this.style.opacity='1'">
+            Sign Out
+          </button>
+        </div>
+      </div>
+
     </div>
   </main>
 
