@@ -120,6 +120,26 @@
     </div>
   </main>
 
+  <!-- USER PORTAL SCREEN (Shown for normal users after login) -->
+  <main class="dashboard-container" id="userDashboardContainer" style="display: none; max-width: 600px; margin: 40px auto; padding: 40px 32px; background: var(--charcoal); border: 1px solid var(--line); border-radius: 4px; text-align: center;">
+    <div style="margin-bottom: 24px;">
+      <img id="userPhoto" src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80" alt="Profile Picture" style="width: 120px; height: 120px; border-radius: 50%; border: 3px solid var(--ember); margin: 0 auto 16px; object-fit: cover;">
+      <h2 id="userName" style="font-family: var(--display); font-size: 36px; letter-spacing: 1px; margin-bottom: 4px;">Gym Member</h2>
+      <p id="userEmail" style="color: var(--muted); font-size: 14px;"></p>
+    </div>
+    <div style="border-top: 1px solid var(--line); padding-top: 24px; text-align: left;">
+      <h3 style="font-family: var(--display); font-size: 22px; letter-spacing: 0.5px; color: var(--ember-2); margin-bottom: 12px;">Your Club Status</h3>
+      <div style="background: var(--panel); border: 1px solid var(--line); padding: 16px; border-radius: 2px; display: flex; justify-content: space-between; align-items: center;">
+        <div>
+          <strong style="display: block; font-size: 15px;">Forge Access Level</strong>
+          <span style="font-size: 13px; color: var(--muted);">Standard Day Pass / Guest</span>
+        </div>
+        <span class="status-badge status-joined" style="font-size: 12px; padding: 6px 12px;">Active Member</span>
+      </div>
+      <p style="margin-top: 20px; color: var(--muted); font-size: 13px; line-height: 1.5;">Welcome to Forge Fitness! Show this portal dashboard screen at the front desk when checking in to any club locations.</p>
+    </div>
+  </main>
+
   <!-- Firebase Core + Auth + Firestore compat SDKs -->
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>

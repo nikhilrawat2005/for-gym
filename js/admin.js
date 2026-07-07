@@ -14,6 +14,12 @@ const emailLoginForm = document.getElementById("emailLoginForm");
 const loginEmail = document.getElementById("loginEmail");
 const loginPassword = document.getElementById("loginPassword");
 
+// User Portal Elements
+const userDashboardContainer = document.getElementById("userDashboardContainer");
+const userPhoto = document.getElementById("userPhoto");
+const userName = document.getElementById("userName");
+const userEmail = document.getElementById("userEmail");
+
 const leadsTableBody = document.getElementById("leadsTableBody");
 const searchBar = document.getElementById("searchBar");
 const filterBtns = document.querySelectorAll(".filter-btn");
@@ -30,15 +36,14 @@ let searchQuery = "";
 // Auth State Observer
 auth.onAuthStateChanged((user) => {
   if (user) {
+    currentUserEmail.textContent = user.email;
     if (user.email === AUTHORIZED_EMAIL) {
-      // Access Granted
-      currentUserEmail.textContent = user.email;
-      showDashboard();
+      // Admin Access
+      showAdminDashboard();
       subscribeToLeads();
     } else {
-      // Access Denied for other emails
-      showError(`Access Denied: ${user.email} is not authorized.`);
-      auth.signOut();
+      // Normal User Access
+      showUserDashboard(user);
     }
   } else {
     // Signed out
@@ -85,15 +90,33 @@ function showError(msg) {
   errorMessage.style.display = "block";
 }
 
-function showDashboard() {
+function showAdminDashboard() {
   authContainer.style.display = "none";
+  userDashboardContainer.style.display = "none";
   dashboardContainer.style.display = "block";
   adminHeader.style.display = "block";
+}
+
+function showUserDashboard(user) {
+  authContainer.style.display = "none";
+  dashboardContainer.style.display = "none";
+  userDashboardContainer.style.display = "block";
+  adminHeader.style.display = "block";
+
+  // Set user details
+  userName.textContent = user.displayName || "Forge Gym Member";
+  userEmail.textContent = user.email;
+  if (user.photoURL) {
+    userPhoto.src = user.photoURL;
+  } else {
+    userPhoto.src = "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=200&q=80";
+  }
 }
 
 function showLogin() {
   authContainer.style.display = "flex";
   dashboardContainer.style.display = "none";
+  userDashboardContainer.style.display = "none";
   adminHeader.style.display = "none";
 }
 

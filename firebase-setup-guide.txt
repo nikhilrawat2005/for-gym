@@ -51,7 +51,7 @@ STEP 3: ENABLE FIREBASE AUTHENTICATION
    B. GOOGLE AUTHENTICATION PROVIDER:
       - Click "Add new provider" and select "Google".
       - Enable it, choose a project support email, and click Save.
-      - (Note: You can log in using Google on your admin panel as long as the Google account's email is exactly nikhil2005114@gmail.com).
+      - (Note: Any user can sign in using Google. However, only the admin email nikhil2005114@gmail.com will see the admin panel. Other users will see a simple personal member profile displaying their name and photo).
 
 
 STEP 4: ENABLE CLOUD FIRESTORE DATABASE
