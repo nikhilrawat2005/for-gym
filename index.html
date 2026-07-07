@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FORGE FITNESS — Train Different</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Archivo:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!-- NAV -->
+<header class="nav" id="nav">
+  <div class="nav-inner">
+    <a href="#top" class="logo">FORGE<span>.</span></a>
+    <nav class="nav-links" id="navLinks">
+      <a href="#programs">Programs</a>
+      <a href="#coaches">Coaches</a>
+      <a href="#plans">Membership</a>
+      <a href="#results">Results</a>
+      <a href="#locations">Locations</a>
+    </nav>
+    <a href="#plans" class="btn btn-primary nav-cta">Join Now</a>
+    <button class="burger" id="burger" aria-label="Menu"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="hero" id="top">
+  <div class="hero-bg">
+    <img src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=1600&q=80" alt="Athlete lifting barbell in dark gym">
+  </div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <p class="eyebrow">24/7 STRENGTH &amp; CONDITIONING CLUB</p>
+    <h1>THE WEIGHT<br>DOESN'T CARE<br>ABOUT YOUR EXCUSES</h1>
+    <p class="hero-sub">Real coaches. Real equipment. Real hours — walk in at 5am or 11pm, the door's always open. Forge Fitness has 40+ clubs across the city built for people who train on their own schedule.</p>
+    <div class="hero-actions">
+      <a href="#plans" class="btn btn-primary">Start Your Free Week</a>
+      <a href="#locations" class="btn btn-ghost">Find a Club →</a>
+    </div>
+  </div>
+  <div class="hero-meter">
+    <div class="meter-label">CLUB CAPACITY — LIVE</div>
+    <div class="meter-track"><div class="meter-fill" id="meterFill"></div></div>
+    <div class="meter-value"><span id="meterPct">62</span>% FLOOR IN USE</div>
+  </div>
+</section>
+
+<!-- MARQUEE STRIP -->
+<div class="marquee">
+  <div class="marquee-track">
+    <span>OPEN 24/7</span><span>•</span><span>NO LOCK-IN CONTRACTS</span><span>•</span><span>40+ CLUBS</span><span>•</span><span>CERTIFIED COACHES</span><span>•</span><span>FREE INDUCTION</span><span>•</span>
+    <span>OPEN 24/7</span><span>•</span><span>NO LOCK-IN CONTRACTS</span><span>•</span><span>40+ CLUBS</span><span>•</span><span>CERTIFIED COACHES</span><span>•</span><span>FREE INDUCTION</span><span>•</span>
+  </div>
+</div>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container about-grid">
+    <div class="about-img">
+      <img src="https://images.unsplash.com/photo-1571731956672-f2b94d7dd0cb?auto=format&fit=crop&w=900&q=80" alt="Gym floor with equipment">
+    </div>
+    <div class="about-text">
+      <p class="eyebrow">WHY FORGE</p>
+      <h2>A gym built around <em>your</em> clock, not ours</h2>
+      <p>We stripped away the things that make gyms annoying — pushy sales pitches, year-long contracts, waiting for a machine at 6pm. What's left is clean equipment, coaches who actually know your name, and a door that never locks.</p>
+      <div class="about-stats">
+        <div class="stat"><span class="stat-num">40+</span><span class="stat-label">Clubs Citywide</span></div>
+        <div class="stat"><span class="stat-num">120</span><span class="stat-label">Certified Coaches</span></div>
+        <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">Access, Every Day</span></div>
+        <div class="stat"><span class="stat-num">15k+</span><span class="stat-label">Active Members</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROGRAMS -->
+<section class="programs" id="programs">
+  <div class="container">
+    <p class="eyebrow center">TRAINING</p>
+    <h2 class="section-title center">Pick your lane</h2>
+    <p class="section-sub center">Every program is coach-led and scales to your level — first session is always a walkthrough, never a workout.</p>
+
+    <div class="program-grid">
+      <div class="program-card">
+        <img src="https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=600&q=80" alt="Strength training with barbells">
+        <div class="program-body">
+          <span class="program-tag">STRENGTH</span>
+          <h3>Powerlifting Floor</h3>
+          <p>Squat racks, deadlift platforms, and a coach who'll fix your form before it fixes your back.</p>
+        </div>
+      </div>
+      <div class="program-card">
+        <img src="https://images.unsplash.com/photo-1517963879433-6ad2b056d712?auto=format&fit=crop&w=600&q=80" alt="Group HIIT class">
+        <div class="program-body">
+          <span class="program-tag">CONDITIONING</span>
+          <h3>HIIT Circuits</h3>
+          <p>45-minute group sessions built to spike your heart rate and torch the excuses.</p>
+        </div>
+      </div>
+      <div class="program-card">
+        <img src="https://images.unsplash.com/photo-1518611012118-696072aa579a?auto=format&fit=crop&w=600&q=80" alt="Yoga and mobility class">
+        <div class="program-body">
+          <span class="program-tag">RECOVERY</span>
+          <h3>Mobility &amp; Yoga</h3>
+          <p>Slow it down twice a week so the rest of your training actually holds up.</p>
+        </div>
+      </div>
+      <div class="program-card">
+        <img src="https://images.unsplash.com/photo-1549060279-7e168fcee0c2?auto=format&fit=crop&w=600&q=80" alt="Boxing training">
+        <div class="program-body">
+          <span class="program-tag">COMBAT</span>
+          <h3>Boxing Fundamentals</h3>
+          <p>Bag work, pad rounds, footwork — no sparring pressure, just clean technique.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COACHES -->
+<section class="coaches" id="coaches">
+  <div class="container">
+    <p class="eyebrow center">THE TEAM</p>
+    <h2 class="section-title center">Coaches who show up early</h2>
+    <div class="coach-grid">
+      <div class="coach-card">
+        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?auto=format&fit=crop&w=500&q=80" alt="Coach Arjun">
+        <h3>Arjun Mehta</h3>
+        <span>Strength &amp; Powerlifting</span>
+      </div>
+      <div class="coach-card">
+        <img src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?auto=format&fit=crop&w=500&q=80" alt="Coach Priya">
+        <h3>Priya Nair</h3>
+        <span>HIIT &amp; Conditioning</span>
+      </div>
+      <div class="coach-card">
+        <img src="https://images.unsplash.com/photo-1541534741688-6078c6bfb5c5?auto=format&fit=crop&w=500&q=80" alt="Coach Rohan">
+        <h3>Rohan Kapoor</h3>
+        <span>Boxing &amp; Combat</span>
+      </div>
+      <div class="coach-card">
+        <img src="https://images.unsplash.com/photo-1550345332-09e3ac987658?auto=format&fit=crop&w=500&q=80" alt="Coach Meera">
+        <h3>Meera Das</h3>
+        <span>Mobility &amp; Yoga</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RESULTS / TESTIMONIALS -->
+<section class="results" id="results">
+  <div class="container">
+    <p class="eyebrow center">MEMBER RESULTS</p>
+    <h2 class="section-title center">They didn't wait for Monday</h2>
+    <div class="testi-grid">
+      <div class="testi-card">
+        <p>"Joined thinking I'd last a month. Fourteen months later I'm deadlifting double my bodyweight and I still train at 6am before work."</p>
+        <div class="testi-person">
+          <img src="https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=200&q=80" alt="Member Kunal">
+          <div><strong>Kunal S.</strong><span>Member since 2024</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <p>"The 24/7 access is the whole point for me — I work nights. First gym that actually fits my life instead of the other way round."</p>
+        <div class="testi-person">
+          <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?auto=format&fit=crop&w=200&q=80" alt="Member Sana">
+          <div><strong>Sana R.</strong><span>Member since 2023</span></div>
+        </div>
+      </div>
+      <div class="testi-card">
+        <p>"No contract meant I could actually try it. Six months in, cancelling is the last thing on my mind."</p>
+        <div class="testi-person">
+          <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80" alt="Member Devansh">
+          <div><strong>Devansh P.</strong><span>Member since 2024</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PLANS -->
+<section class="plans" id="plans">
+  <div class="container">
+    <p class="eyebrow center">MEMBERSHIP</p>
+    <h2 class="section-title center">No lock-in. Cancel anytime.</h2>
+    <p class="section-sub center">Every plan includes 24/7 access to your home club and a free induction session with a coach.</p>
+
+    <div class="plan-grid">
+      <div class="plan-card">
+        <h3>Basic</h3>
+        <div class="plan-price">₹1,499<span>/mo</span></div>
+        <ul>
+          <li>Access to 1 home club</li>
+          <li>Standard gym hours</li>
+          <li>Free fitness assessment</li>
+          <li>Locker access</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost full">Choose Basic</a>
+      </div>
+      <div class="plan-card featured">
+        <span class="plan-badge">MOST POPULAR</span>
+        <h3>All-Access</h3>
+        <div class="plan-price">₹2,499<span>/mo</span></div>
+        <ul>
+          <li>24/7 access, any club</li>
+          <li>All group classes included</li>
+          <li>Monthly coach check-in</li>
+          <li>Guest passes x2/month</li>
+        </ul>
+        <a href="#contact" class="btn btn-primary full">Choose All-Access</a>
+      </div>
+      <div class="plan-card">
+        <h3>Elite Coaching</h3>
+        <div class="plan-price">₹4,999<span>/mo</span></div>
+        <ul>
+          <li>Everything in All-Access</li>
+          <li>Weekly 1-on-1 coaching</li>
+          <li>Custom nutrition plan</li>
+          <li>Priority class booking</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost full">Choose Elite</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATIONS -->
+<section class="locations" id="locations">
+  <div class="container locations-grid">
+    <div>
+      <p class="eyebrow">FIND YOUR CLUB</p>
+      <h2>40+ clubs, one membership</h2>
+      <p>Your membership works at every Forge club in the city — train near home on weekdays, near work on the weekend.</p>
+      <ul class="location-list">
+        <li><strong>Connaught Place</strong><span>Open 24 hours</span></li>
+        <li><strong>Indirapuram</strong><span>Open 24 hours</span></li>
+        <li><strong>Cyber City, Gurugram</strong><span>Open 24 hours</span></li>
+        <li><strong>Noida Sector 62</strong><span>Open 24 hours</span></li>
+      </ul>
+    </div>
+    <div class="locations-img">
+      <img src="https://images.unsplash.com/photo-1540497077202-7c8a3999166f?auto=format&fit=crop&w=800&q=80" alt="Gym exterior at night">
+    </div>
+  </div>
+</section>
+
+<!-- CTA / CONTACT -->
+<section class="cta-contact" id="contact">
+  <div class="container cta-grid">
+    <div class="cta-text">
+      <h2>Your first week is free.<br>No card required.</h2>
+      <p>Leave your number, a coach from your nearest club will call within a day to book your induction.</p>
+    </div>
+    <form class="cta-form" id="joinForm">
+      <input type="text" placeholder="Full name" required>
+      <input type="tel" placeholder="Phone number" required>
+      <select required>
+        <option value="" disabled selected>Nearest club</option>
+        <option>Connaught Place</option>
+        <option>Indirapuram</option>
+        <option>Cyber City, Gurugram</option>
+        <option>Noida Sector 62</option>
+      </select>
+      <button type="submit" class="btn btn-primary full">Claim Free Week</button>
+      <p class="form-note" id="formNote"></p>
+    </form>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="footer">
+  <div class="container footer-grid">
+    <div>
+      <a href="#top" class="logo">FORGE<span>.</span></a>
+      <p>Strength &amp; conditioning clubs, open around your clock.</p>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <a href="#programs">Programs</a>
+      <a href="#coaches">Coaches</a>
+      <a href="#plans">Membership</a>
+      <a href="#locations">Locations</a>
+    </div>
+    <div>
+      <h4>Contact</h4>
+      <a href="tel:+911140001234">+91 11 4000 1234</a>
+      <a href="mailto:hello@forgefitness.in">hello@forgefitness.in</a>
+    </div>
+  </div>
+  <p class="footer-bottom">© 2026 Forge Fitness. All rights reserved.</p>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
