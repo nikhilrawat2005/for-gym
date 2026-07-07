@@ -107,6 +107,28 @@ navLinks.querySelectorAll('a').forEach(a => {
 });
 
 // ============================================================
+// NAV — Scroll state + active link highlighting
+// ============================================================
+const navEl = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  navEl.classList.toggle('scrolled', window.scrollY > 40);
+}, { passive: true });
+
+const sectionIds = ['top','programs','coaches','plans','results','locations'];
+const navAnchors = Array.from(navLinks.querySelectorAll('a'));
+const sections = sectionIds.map(id => document.getElementById(id)).filter(Boolean);
+
+const sectionObserver = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      const id = entry.target.id;
+      navAnchors.forEach(a => a.classList.toggle('active', a.getAttribute('href') === `#${id}`));
+    }
+  });
+}, { rootMargin: '-45% 0px -50% 0px' });
+sections.forEach(sec => sectionObserver.observe(sec));
+
+// ============================================================
 // LIVE CAPACITY METER
 // ============================================================
 window.addEventListener('load', () => {

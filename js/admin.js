@@ -22,17 +22,34 @@ const userEmail = document.getElementById("userEmail");
 
 const leadsTableBody = document.getElementById("leadsTableBody");
 const searchBar = document.getElementById("searchBar");
-const filterBtns = document.querySelectorAll(".filter-btn");
+const filterBtns = document.querySelectorAll("#tab-leads-list .filter-btn");
 
 const statTotal = document.getElementById("statTotal");
 const statNew = document.getElementById("statNew");
 const statContacted = document.getElementById("statContacted");
 const statJoined = document.getElementById("statJoined");
 
+// New stat card elements (Phase 2)
+const statTotalMembers = document.getElementById("statTotalMembers");
+const statActiveMembers = document.getElementById("statActiveMembers");
+const statExpiringMembers = document.getElementById("statExpiringMembers");
+const statTotalLeads = document.getElementById("statTotalLeads");
+
+// New search/filter elements for members tables (Phase 2)
+const activeSearchBar = document.getElementById("activeSearchBar");
+const expiringSearchBar = document.getElementById("expiringSearchBar");
+
 let leads = []; // Local cache of leads
 let members = []; // Local cache of gym members
 let currentFilter = "all";
 let searchQuery = "";
+
+// Per-table state for search / gender filter / sorting (Phase 2)
+const tableState = {
+  active: { search: "", filter: "all", sortKey: null, sortDir: "asc" },
+  expiring: { search: "", filter: "all", sortKey: null, sortDir: "asc" },
+  leads: { sortKey: null, sortDir: "asc" }
+};
 
 // Auth State Observer
 auth.onAuthStateChanged((user) => {
@@ -187,6 +204,77 @@ function subscribeToMembers() {
     });
 }
 
+// Compute daysLeft for a member (extracted so it can be reused for sorting/filtering)
+function computeDaysLeft(member) {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  const start = new Date(member.startDate);
+  const durationMonths = parseInt(member.duration);
+  const expiry = new Date(start);
+  expiry.setMonth(expiry.getMonth() + durationMonths);
+  const diffTime = expiry.getTime() - today.getTime();
+  return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+}
+
+function memberRowHTML(member, daysLeft) {
+  return `
+    <tr>
+      <td class="lead-name">${escapeHTML(member.name)}</td>
+      <td>${member.age} / ${member.gender}</td>
+      <td>
+        <div class="lead-phone">${escapeHTML(member.phone)}</div>
+        <div style="font-size: 11px; color: var(--muted);">${escapeHTML(member.address || 'No address')}</div>
+      </td>
+      <td>${member.startDate}</td>
+      <td>${member.duration} Month${member.duration > 1 ? 's' : ''}</td>
+      <td>
+        <span style="font-weight: 700; color: ${daysLeft < 30 ? 'var(--error)' : 'var(--success)'}">
+          ${daysLeft > 0 ? daysLeft + ' Days Left' : (daysLeft === 0 ? 'Expires Today' : 'Expired')}
+        </span>
+      </td>
+      <td>₹${parseInt(member.fees).toLocaleString()}</td>
+      <td>
+        <button class="btn-delete" style="margin: 0;" onclick="deleteMember('${member.id}')">Remove</button>
+      </td>
+    </tr>
+  `;
+}
+
+// Apply search text + gender filter to a list of members (with daysLeft attached)
+function filterMembers(list, state) {
+  let result = list;
+  if (state.filter !== "all") {
+    result = result.filter(m => m.gender === state.filter);
+  }
+  if (state.search) {
+    const q = state.search.toLowerCase();
+    result = result.filter(m =>
+      (m.name && m.name.toLowerCase().includes(q)) ||
+      (m.phone && m.phone.toLowerCase().includes(q))
+    );
+  }
+  return result;
+}
+
+// Apply current sort key/direction for a member list
+function sortMembers(list, state) {
+  if (!state.sortKey) return list;
+  const dir = state.sortDir === "asc" ? 1 : -1;
+  const key = state.sortKey;
+  return [...list].sort((a, b) => {
+    let av, bv;
+    if (key === "daysLeft") { av = a.daysLeft; bv = b.daysLeft; }
+    else if (key === "age" || key === "fees") { av = parseFloat(a[key]); bv = parseFloat(b[key]); }
+    else if (key === "duration") { av = parseInt(a[key]); bv = parseInt(b[key]); }
+    else if (key === "startDate") { av = new Date(a[key]).getTime(); bv = new Date(b[key]).getTime(); }
+    else { av = (a[key] || "").toString().toLowerCase(); bv = (b[key] || "").toString().toLowerCase(); }
+
+    if (av < bv) return -1 * dir;
+    if (av > bv) return 1 * dir;
+    return 0;
+  });
+}
+
 // Render members into Active vs Expiring (near end)
 function renderMembers() {
   const activeBody = document.getElementById("activeMembersTableBody");
@@ -194,66 +282,44 @@ function renderMembers() {
 
   if (!activeBody || !expiringBody) return;
 
-  const activeRows = [];
-  const expiringRows = [];
+  // Attach computed daysLeft to every member once
+  const withDaysLeft = members.map(m => ({ ...m, daysLeft: computeDaysLeft(m) }));
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  let activeList = withDaysLeft.filter(m => m.daysLeft >= 30);
+  let expiringList = withDaysLeft.filter(m => m.daysLeft < 30);
 
-  members.forEach(member => {
-    // Calculate expiration date
-    const start = new Date(member.startDate);
-    const durationMonths = parseInt(member.duration);
-    const expiry = new Date(start);
-    expiry.setMonth(expiry.getMonth() + durationMonths);
-    
-    // Calculate difference in days
-    const diffTime = expiry.getTime() - today.getTime();
-    const daysLeft = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  // Search + gender filter
+  activeList = filterMembers(activeList, tableState.active);
+  expiringList = filterMembers(expiringList, tableState.expiring);
 
-    const tr = `
-      <tr>
-        <td class="lead-name">${escapeHTML(member.name)}</td>
-        <td>${member.age} / ${member.gender}</td>
-        <td>
-          <div class="lead-phone">${escapeHTML(member.phone)}</div>
-          <div style="font-size: 11px; color: var(--muted);">${escapeHTML(member.address || 'No address')}</div>
-        </td>
-        <td>${member.startDate}</td>
-        <td>${member.duration} Month${member.duration > 1 ? 's' : ''}</td>
-        <td>
-          <span style="font-weight: 700; color: ${daysLeft < 30 ? 'var(--error)' : 'var(--success)'}">
-            ${daysLeft > 0 ? daysLeft + ' Days Left' : (daysLeft === 0 ? 'Expires Today' : 'Expired')}
-          </span>
-        </td>
-        <td>₹${parseInt(member.fees).toLocaleString()}</td>
-        <td>
-          <button class="btn-delete" style="margin: 0;" onclick="deleteMember('${member.id}')">Remove</button>
-        </td>
-      </tr>
-    `;
-
-    // Move to near to end if days remaining is < 30
-    if (daysLeft < 30) {
-      expiringRows.push(tr);
-    } else {
-      activeRows.push(tr);
-    }
-  });
+  // Sorting
+  activeList = sortMembers(activeList, tableState.active);
+  expiringList = sortMembers(expiringList, tableState.expiring);
 
   // Populate Active table
-  if (activeRows.length === 0) {
-    activeBody.innerHTML = `<tr><td colspan="8" class="empty-state">No active members with >= 30 days left.</td></tr>`;
+  if (activeList.length === 0) {
+    activeBody.innerHTML = `<tr><td colspan="8" class="empty-state">No active members found.</td></tr>`;
   } else {
-    activeBody.innerHTML = activeRows.join('');
+    activeBody.innerHTML = activeList.map(m => memberRowHTML(m, m.daysLeft)).join('');
   }
 
   // Populate Expiring table
-  if (expiringRows.length === 0) {
-    expiringBody.innerHTML = `<tr><td colspan="8" class="empty-state">No expiring members with < 30 days left.</td></tr>`;
+  if (expiringList.length === 0) {
+    expiringBody.innerHTML = `<tr><td colspan="8" class="empty-state">No expiring members found.</td></tr>`;
   } else {
-    expiringBody.innerHTML = expiringRows.join('');
+    expiringBody.innerHTML = expiringList.map(m => memberRowHTML(m, m.daysLeft)).join('');
   }
+
+  // Update stat cards
+  updateStats(withDaysLeft);
+}
+
+// Update stat cards summary (Phase 2)
+function updateStats(withDaysLeft) {
+  if (statTotalMembers) statTotalMembers.textContent = members.length;
+  if (statActiveMembers) statActiveMembers.textContent = withDaysLeft.filter(m => m.daysLeft >= 30).length;
+  if (statExpiringMembers) statExpiringMembers.textContent = withDaysLeft.filter(m => m.daysLeft < 30).length;
+  if (statTotalLeads) statTotalLeads.textContent = leads.length;
 }
 
 // Add Member Form submission
@@ -344,6 +410,28 @@ function renderLeads() {
     );
   }
 
+  // Sorting (Phase 2)
+  const sortState = tableState.leads;
+  if (sortState.sortKey) {
+    const dir = sortState.sortDir === "asc" ? 1 : -1;
+    const key = sortState.sortKey;
+    filteredLeads = [...filteredLeads].sort((a, b) => {
+      let av, bv;
+      if (key === "createdAt") {
+        av = a.createdAt ? a.createdAt.seconds : 0;
+        bv = b.createdAt ? b.createdAt.seconds : 0;
+      } else {
+        av = (a[key] || "").toString().toLowerCase();
+        bv = (b[key] || "").toString().toLowerCase();
+      }
+      if (av < bv) return -1 * dir;
+      if (av > bv) return 1 * dir;
+      return 0;
+    });
+  }
+
+  if (statTotalLeads) statTotalLeads.textContent = leads.length;
+
   if (filteredLeads.length === 0) {
     leadsTableBody.innerHTML = `
       <tr>
@@ -416,6 +504,62 @@ filterBtns.forEach(btn => {
     btn.classList.add("active");
     currentFilter = btn.getAttribute("data-filter");
     renderLeads();
+  });
+});
+
+// ===== PHASE 2: Search bars for Active / Expiring member tables =====
+if (activeSearchBar) {
+  activeSearchBar.addEventListener("input", (e) => {
+    tableState.active.search = e.target.value;
+    renderMembers();
+  });
+}
+
+if (expiringSearchBar) {
+  expiringSearchBar.addEventListener("input", (e) => {
+    tableState.expiring.search = e.target.value;
+    renderMembers();
+  });
+}
+
+// ===== PHASE 2: Gender filter buttons for Active / Expiring member tables =====
+document.querySelectorAll(".filter-btn[data-target='active'], .filter-btn[data-target='expiring']").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const target = btn.getAttribute("data-target");
+    const group = document.querySelectorAll(`.filter-btn[data-target='${target}']`);
+    group.forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+    tableState[target].filter = btn.getAttribute("data-filter");
+    renderMembers();
+  });
+});
+
+// ===== PHASE 2: Sortable table headers (Active, Expiring, Leads) =====
+document.querySelectorAll("th.sortable").forEach(th => {
+  th.addEventListener("click", () => {
+    const target = th.getAttribute("data-target");
+    const key = th.getAttribute("data-sort");
+    const state = tableState[target];
+    if (!state) return;
+
+    if (state.sortKey === key) {
+      state.sortDir = state.sortDir === "asc" ? "desc" : "asc";
+    } else {
+      state.sortKey = key;
+      state.sortDir = "asc";
+    }
+
+    // Reset sort indicator classes for this table's headers only
+    document.querySelectorAll(`th.sortable[data-target='${target}']`).forEach(h => {
+      h.classList.remove("sort-asc", "sort-desc");
+    });
+    th.classList.add(state.sortDir === "asc" ? "sort-asc" : "sort-desc");
+
+    if (target === "leads") {
+      renderLeads();
+    } else {
+      renderMembers();
+    }
   });
 });
 

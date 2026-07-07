@@ -384,6 +384,36 @@ tr:hover td {
   border-color: var(--error);
 }
 
+th.sortable {
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.2s ease;
+  position: relative;
+}
+
+th.sortable:hover {
+  color: var(--paper);
+}
+
+th.sortable::after {
+  content: '⇅';
+  margin-left: 6px;
+  font-size: 10px;
+  opacity: 0.4;
+}
+
+th.sortable.sort-asc::after {
+  content: '↑';
+  opacity: 1;
+  color: var(--ember);
+}
+
+th.sortable.sort-desc::after {
+  content: '↓';
+  opacity: 1;
+  color: var(--ember);
+}
+
 .empty-state {
   text-align: center;
   padding: 48px;

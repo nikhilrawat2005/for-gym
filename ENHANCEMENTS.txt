@@ -1,0 +1,76 @@
+FORGE FITNESS WEBSITE — ENHANCEMENT LOG
+=========================================
+Yeh file un sab naye features aur improvements ki list hai jo website me
+add/enhance kiye gaye hain. Kaam 3 phases me kiya ja raha hai.
+
+------------------------------------------------
+PHASE 1 — Main Website (index.html) UI/UX Polish
+------------------------------------------------
+Status: DONE
+
+1. Color System Upgrade
+   - Naye design tokens add kiye: --panel-2, --ember-glow, --success,
+     --info, --error, --line-strong, --shadow-sm/md/ember, --radius
+   - Ab poori site me consistent shadows aur elevation hai (halka
+     cinematic depth, pehle flat tha)
+
+2. Buttons Enhanced
+   - Primary button ab hover par glow shadow + lift animation deta hai
+   - Ghost button ka hover feedback improve kiya (subtle bg tint)
+   - Sabhi buttons me active/click state add kiya (press feel)
+   - Icon/gap spacing consistent kiya
+
+3. Navbar
+   - Scroll karne par navbar solid + blurred background le leta hai
+     (pehle hamesha transparent gradient tha, text readability kam thi)
+   - Active section ka nav link automatically highlight hota hai
+     (scroll spy) with underline animation
+
+4. Cards (Programs, Coaches, Testimonials, Plans)
+   - Hover par lift + shadow effect add kiya, sab cards ab interactive
+     feel dete hain
+   - Coach photo hover par color me aata hai (grayscale se)
+   - "Most Popular" plan card ko thoda scale-up + glow diya taaki
+     visually stand out kare (conversion-focused)
+
+------------------------------------------------
+PHASE 2 — Admin Panel UI/UX (admin.html) — DONE
+------------------------------------------------
+Status: DONE
+
+1. Dashboard Stat Cards
+   - Top par 4 stat cards add kiye: Total Members, Active Members,
+     Expiring Soon, Free Trial Leads — sab tabs ke upar hamesha visible
+   - Live update hote hain jaise hi Firestore data change hota hai
+
+2. Search + Filter — Active & Expiring Members Tabs
+   - Dono tabs me naam/phone se search bar add kiya
+   - Gender filter buttons (All / Male / Female) add kiye
+   - Filter aur search dono ek saath kaam karte hain (AND logic)
+
+3. Sortable Table Columns
+   - Active Members, Expiring Members aur Free Claims — teeno tables
+     me column headers pe click karke sort ho sakta hai
+   - Sort arrow indicator (↑/↓) column header me dikhta hai, dubara
+     click karne se order (asc/desc) toggle hota hai
+   - Sortable columns: Name, Age, Start Date, Duration, Days Left,
+     Fees (members) aur Date Submitted, Name, Club, Status (leads)
+
+Note: "Better empty-states/skeletons" aur "sidebar icons" jaisi chhoti
+polish items abhi skip ki hain taaki core Phase 2 functionality
+(stats + search/filter + sorting) pehle mil jaye. Ye baad me
+add ki ja sakti hain agar chahiye.
+
+------------------------------------------------
+PHASE 3 — Advanced / New Features — PENDING
+------------------------------------------------
+Planned (client-useful features):
+   - CSV Export (members list aur leads list dono)
+   - WhatsApp "Remind" quick-action button on expiring members
+   - Renewal/expiry auto-highlight (color-coded rows: red <7 days,
+     yellow <30 days)
+   - Dashboard summary chart (active vs expired members)
+   - Bulk actions (select multiple leads -> mark contacted)
+   - Print member card / receipt
+
+Is file ko update karte rahenge jaise-jaise phases complete honge.

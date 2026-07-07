@@ -80,21 +80,51 @@
 
     <!-- MAIN BODY CONTENT -->
     <section class="admin-main-content">
-      
+
+      <!-- STAT CARDS (always visible summary) -->
+      <div class="dashboard-stats">
+        <div class="stat-card">
+          <span>Total Members</span>
+          <h3 id="statTotalMembers">0</h3>
+        </div>
+        <div class="stat-card">
+          <span>Active Members</span>
+          <h3 id="statActiveMembers">0</h3>
+        </div>
+        <div class="stat-card">
+          <span>Expiring Soon</span>
+          <h3 id="statExpiringMembers" style="color: var(--error);">0</h3>
+        </div>
+        <div class="stat-card">
+          <span>Free Trial Leads</span>
+          <h3 id="statTotalLeads">0</h3>
+        </div>
+      </div>
+
       <!-- TAB 1: ACTIVE MEMBERS -->
       <div class="admin-tab-content active" id="tab-active-members">
         <h2 class="tab-title">Active Members (>= 30 days left)</h2>
+        <div class="table-controls">
+          <div class="search-wrapper">
+            <input type="text" class="search-input" id="activeSearchBar" placeholder="Search by name or phone...">
+          </div>
+          <div class="filter-wrapper">
+            <button class="filter-btn active" data-filter="all" data-target="active">All</button>
+            <button class="filter-btn" data-filter="Male" data-target="active">Male</button>
+            <button class="filter-btn" data-filter="Female" data-target="active">Female</button>
+          </div>
+        </div>
         <div class="table-wrapper">
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Age/Gender</th>
+                <th class="sortable" data-sort="name" data-target="active">Name</th>
+                <th class="sortable" data-sort="age" data-target="active">Age/Gender</th>
                 <th>Contact</th>
-                <th>Starting Date</th>
-                <th>Duration</th>
-                <th>Days Left</th>
-                <th>Fees</th>
+                <th class="sortable" data-sort="startDate" data-target="active">Starting Date</th>
+                <th class="sortable" data-sort="duration" data-target="active">Duration</th>
+                <th class="sortable" data-sort="daysLeft" data-target="active">Days Left</th>
+                <th class="sortable" data-sort="fees" data-target="active">Fees</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -108,17 +138,27 @@
       <!-- TAB 2: EXPIRING MEMBERS (NEAR TO END) -->
       <div class="admin-tab-content" id="tab-expiring-members">
         <h2 class="tab-title" style="color: var(--error);">Expiring Soon (< 30 days left)</h2>
+        <div class="table-controls">
+          <div class="search-wrapper">
+            <input type="text" class="search-input" id="expiringSearchBar" placeholder="Search by name or phone...">
+          </div>
+          <div class="filter-wrapper">
+            <button class="filter-btn active" data-filter="all" data-target="expiring">All</button>
+            <button class="filter-btn" data-filter="Male" data-target="expiring">Male</button>
+            <button class="filter-btn" data-filter="Female" data-target="expiring">Female</button>
+          </div>
+        </div>
         <div class="table-wrapper">
           <table>
             <thead>
               <tr>
-                <th>Name</th>
-                <th>Age/Gender</th>
+                <th class="sortable" data-sort="name" data-target="expiring">Name</th>
+                <th class="sortable" data-sort="age" data-target="expiring">Age/Gender</th>
                 <th>Contact</th>
-                <th>Starting Date</th>
-                <th>Duration</th>
-                <th>Days Left</th>
-                <th>Fees</th>
+                <th class="sortable" data-sort="startDate" data-target="expiring">Starting Date</th>
+                <th class="sortable" data-sort="duration" data-target="expiring">Duration</th>
+                <th class="sortable" data-sort="daysLeft" data-target="expiring">Days Left</th>
+                <th class="sortable" data-sort="fees" data-target="expiring">Fees</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -201,22 +241,22 @@
             <input type="text" class="search-input" id="searchBar" placeholder="Search leads...">
           </div>
           <div class="filter-wrapper">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="New">New</button>
-            <button class="filter-btn" data-filter="Contacted">Contacted</button>
-            <button class="filter-btn" data-filter="Joined">Joined</button>
+            <button class="filter-btn active" data-filter="all" data-target="leads">All</button>
+            <button class="filter-btn" data-filter="New" data-target="leads">New</button>
+            <button class="filter-btn" data-filter="Contacted" data-target="leads">Contacted</button>
+            <button class="filter-btn" data-filter="Joined" data-target="leads">Joined</button>
           </div>
         </div>
         <div class="table-wrapper">
           <table id="leadsTable">
             <thead>
               <tr>
-                <th>Date Submitted</th>
-                <th>Name</th>
+                <th class="sortable" data-sort="createdAt" data-target="leads">Date Submitted</th>
+                <th class="sortable" data-sort="name" data-target="leads">Name</th>
                 <th>Phone</th>
-                <th>Preferred Club</th>
+                <th class="sortable" data-sort="club" data-target="leads">Preferred Club</th>
                 <th>Visit Date</th>
-                <th>Status</th>
+                <th class="sortable" data-sort="status" data-target="leads">Status</th>
                 <th>Actions</th>
               </tr>
             </thead>
