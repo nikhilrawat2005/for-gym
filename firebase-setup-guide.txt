@@ -1,0 +1,89 @@
+=============================================================================
+                  FORGE FITNESS - FIREBASE EXTERNAL SETUP GUIDE
+=============================================================================
+
+To make your admin panel and form submission work, you need to configure Firebase.
+Follow these steps to set up your Firebase project and connect it to your code:
+
+STEP 1: CREATE A FIREBASE PROJECT
+---------------------------------
+1. Go to the Firebase Console: https://console.firebase.google.com/
+2. Click "Add Project" (or "Create a project").
+3. Enter a name (e.g., "Forge Fitness" or "for-gym") and click Continue.
+4. Enable or disable Google Analytics as per your preference, then click "Create Project".
+
+
+STEP 2: REGISTER A WEB APP & COPY CREDENTIALS
+--------------------------------------------
+1. In your Firebase Project Dashboard, click the Web icon (represented by </>).
+2. Enter an app nickname (e.g., "Forge Gym Web App").
+3. Click "Register App".
+4. Firebase will show you a configuration object looking like this:
+   
+   const firebaseConfig = {
+     apiKey: "YOUR_API_KEY",
+     authDomain: "YOUR_AUTH_DOMAIN",
+     projectId: "YOUR_PROJECT_ID",
+     storageBucket: "YOUR_STORAGE_BUCKET",
+     messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+     appId: "YOUR_APP_ID"
+   };
+
+5. Open the file `js/firebase-config.js` in your code editor.
+6. Replace the placeholder values with your actual credentials copied from the Firebase Console.
+7. Save the file.
+
+
+STEP 3: ENABLE FIREBASE AUTHENTICATION
+--------------------------------------
+1. In the Firebase left sidebar, click on "Build" and choose "Authentication".
+2. Click "Get Started".
+3. Under the "Sign-in method" tab:
+   
+   A. EMAIL / PASSWORD PROVIDER:
+      - Click "Email/Password".
+      - Enable it and click Save.
+      - Go to the "Users" tab, click "Add User", and add:
+        - Email: nikhil2005114@gmail.com
+        - Password: [Create a strong password here]
+      - You can now use this email and password to log in directly on the admin page.
+
+   B. GOOGLE AUTHENTICATION PROVIDER:
+      - Click "Add new provider" and select "Google".
+      - Enable it, choose a project support email, and click Save.
+      - (Note: You can log in using Google on your admin panel as long as the Google account's email is exactly nikhil2005114@gmail.com).
+
+
+STEP 4: ENABLE CLOUD FIRESTORE DATABASE
+----------------------------------------
+1. In the Firebase left sidebar, click on "Build" and choose "Firestore Database".
+2. Click "Create Database".
+3. Choose "Start in production mode" or "Start in test mode" (either is fine, we will overwrite rules in the next step).
+4. Select a location closest to your users and click Enable.
+
+
+STEP 5: CONFIGURE FIRESTORE SECURITY RULES
+------------------------------------------
+1. Once the Firestore database is created, go to the "Rules" tab at the top.
+2. Replace the existing rules with the following rules:
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Rules for leads collection
+    match /leads/{leadId} {
+      // Anyone can submit a lead form
+      allow create: if true;
+      
+      // Only the authorized admin email can view, edit, or delete leads
+      allow read, write: if request.auth != null && request.auth.token.email == 'nikhil2005114@gmail.com';
+    }
+  }
+}
+
+3. Click "Publish".
+
+=============================================================================
+Setup is complete! You can now open index.html to submit leads, and navigate
+to admin.html to securely log in and manage registrations.
+=============================================================================
