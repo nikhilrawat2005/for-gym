@@ -1,5 +1,9 @@
 // Admin Panel Controller for Forge Fitness
-const AUTHORIZED_EMAIL = "nikhil2005114@gmail.com";
+// List of admin emails allowed to access the dashboard (add more here as needed)
+const AUTHORIZED_EMAILS = [
+  "nikhil2005114@gmail.com",
+  "bhatt.yogesh0814@gmail.com"
+];
 
 // DOM Elements
 const authContainer = document.getElementById("authContainer");
@@ -43,6 +47,7 @@ let leads = []; // Local cache of leads
 let members = []; // Local cache of gym members
 let currentFilter = "all";
 let searchQuery = "";
+let lastFilteredLeads = [];
 
 // Per-table state for search / gender filter / sorting (Phase 2)
 const tableState = {
@@ -55,7 +60,7 @@ const tableState = {
 auth.onAuthStateChanged((user) => {
   if (user) {
     currentUserEmail.textContent = user.email;
-    if (user.email === AUTHORIZED_EMAIL) {
+    if (AUTHORIZED_EMAILS.includes(user.email)) {
       // Admin Access
       showAdminDashboard();
       subscribeToLeads();
@@ -217,6 +222,17 @@ function computeDaysLeft(member) {
 }
 
 function memberRowHTML(member, daysLeft) {
+  // Expiry color-coding tiers: red (<7 days or expired), orange (7-29), green (>=30)
+  let expiryColor = 'var(--success)';
+  if (daysLeft < 7) expiryColor = 'var(--error)';
+  else if (daysLeft < 30) expiryColor = '#f0a500';
+
+  const cleanPhone = (member.phone || '').replace(/\D/g, '');
+  const waMessage = encodeURIComponent(
+    `Hi ${member.name}, this is a reminder from Forge Fitness that your membership is ${daysLeft > 0 ? 'expiring in ' + daysLeft + ' day(s)' : 'expired'}. Please renew soon to continue your access. Thank you!`
+  );
+  const waLink = cleanPhone ? `https://wa.me/${cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone}?text=${waMessage}` : '#';
+
   return `
     <tr>
       <td class="lead-name">${escapeHTML(member.name)}</td>
@@ -228,12 +244,13 @@ function memberRowHTML(member, daysLeft) {
       <td>${member.startDate}</td>
       <td>${member.duration} Month${member.duration > 1 ? 's' : ''}</td>
       <td>
-        <span style="font-weight: 700; color: ${daysLeft < 30 ? 'var(--error)' : 'var(--success)'}">
+        <span style="font-weight: 700; color: ${expiryColor}">
           ${daysLeft > 0 ? daysLeft + ' Days Left' : (daysLeft === 0 ? 'Expires Today' : 'Expired')}
         </span>
       </td>
       <td>₹${parseInt(member.fees).toLocaleString()}</td>
-      <td>
+      <td style="white-space: nowrap;">
+        ${cleanPhone ? `<a class="btn-remind" href="${waLink}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
         <button class="btn-delete" style="margin: 0;" onclick="deleteMember('${member.id}')">Remove</button>
       </td>
     </tr>
@@ -276,6 +293,9 @@ function sortMembers(list, state) {
 }
 
 // Render members into Active vs Expiring (near end)
+let lastActiveList = [];
+let lastExpiringList = [];
+
 function renderMembers() {
   const activeBody = document.getElementById("activeMembersTableBody");
   const expiringBody = document.getElementById("expiringMembersTableBody");
@@ -295,6 +315,9 @@ function renderMembers() {
   // Sorting
   activeList = sortMembers(activeList, tableState.active);
   expiringList = sortMembers(expiringList, tableState.expiring);
+
+  lastActiveList = activeList;
+  lastExpiringList = expiringList;
 
   // Populate Active table
   if (activeList.length === 0) {
@@ -431,6 +454,7 @@ function renderLeads() {
   }
 
   if (statTotalLeads) statTotalLeads.textContent = leads.length;
+  lastFilteredLeads = filteredLeads;
 
   if (filteredLeads.length === 0) {
     leadsTableBody.innerHTML = `
@@ -562,6 +586,69 @@ document.querySelectorAll("th.sortable").forEach(th => {
     }
   });
 });
+
+// ===== PHASE 3: CSV Export =====
+function downloadCSV(filename, rows) {
+  if (!rows || rows.length === 0) {
+    alert("No data to export.");
+    return;
+  }
+  const csvContent = rows.map(row =>
+    row.map(cell => {
+      const val = (cell === null || cell === undefined) ? "" : String(cell);
+      // Escape quotes and wrap in quotes if it contains comma/quote/newline
+      if (val.includes(",") || val.includes('"') || val.includes("\n")) {
+        return `"${val.replace(/"/g, '""')}"`;
+      }
+      return val;
+    }).join(",")
+  ).join("\n");
+
+  const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}
+
+function exportMembersCSV(list, filename) {
+  const header = ["Name", "Age", "Gender", "Phone", "Address", "Start Date", "Duration (Months)", "Days Left", "Fees"];
+  const rows = list.map(m => [
+    m.name, m.age, m.gender, m.phone, m.address || "", m.startDate, m.duration, m.daysLeft, m.fees
+  ]);
+  downloadCSV(filename, [header, ...rows]);
+}
+
+const exportActiveBtn = document.getElementById("exportActiveCsv");
+const exportExpiringBtn = document.getElementById("exportExpiringCsv");
+const exportLeadsBtn = document.getElementById("exportLeadsCsv");
+
+if (exportActiveBtn) {
+  exportActiveBtn.addEventListener("click", () => {
+    exportMembersCSV(lastActiveList, `active-members-${new Date().toISOString().slice(0,10)}.csv`);
+  });
+}
+
+if (exportExpiringBtn) {
+  exportExpiringBtn.addEventListener("click", () => {
+    exportMembersCSV(lastExpiringList, `expiring-members-${new Date().toISOString().slice(0,10)}.csv`);
+  });
+}
+
+if (exportLeadsBtn) {
+  exportLeadsBtn.addEventListener("click", () => {
+    const header = ["Date Submitted", "Name", "Phone", "Preferred Club", "Visit Date", "Status"];
+    const rows = lastFilteredLeads.map(l => [
+      l.createdAt ? new Date(l.createdAt.seconds * 1000).toLocaleDateString() : "Pending",
+      l.name, l.phone, l.club || "", l.visitDate || "", l.status || ""
+    ]);
+    downloadCSV(`leads-${new Date().toISOString().slice(0,10)}.csv`, [header, ...rows]);
+  });
+}
 
 // Utility to escape HTML and prevent XSS injection
 function escapeHTML(str) {

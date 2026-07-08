@@ -62,15 +62,38 @@ polish items abhi skip ki hain taaki core Phase 2 functionality
 add ki ja sakti hain agar chahiye.
 
 ------------------------------------------------
-PHASE 3 — Advanced / New Features — PENDING
+PHASE 3 — Advanced / New Features — PARTIALLY DONE
 ------------------------------------------------
-Planned (client-useful features):
-   - CSV Export (members list aur leads list dono)
-   - WhatsApp "Remind" quick-action button on expiring members
-   - Renewal/expiry auto-highlight (color-coded rows: red <7 days,
-     yellow <30 days)
-   - Dashboard summary chart (active vs expired members)
-   - Bulk actions (select multiple leads -> mark contacted)
-   - Print member card / receipt
+Status: PARTIALLY DONE (kaam ruk gaya, neeche pending list hai)
+
+DONE:
+1. CSV Export
+   - "Export CSV" button add kiya Active Members, Expiring Members,
+     aur Free Trial Claims — teeno tabs me
+   - Current search/filter/sort ke hisaab se jo data table me dikh
+     raha hai wahi export hota hai
+   - File automatically download hoti hai (e.g. active-members-2026-07-08.csv)
+
+2. WhatsApp "Remind" Quick Action
+   - Active aur Expiring Members dono tabs ki row me "WhatsApp" button
+     add kiya (Actions column me)
+   - Click karte hi member ke number pe pre-filled reminder message
+     ke saath WhatsApp chat khulta hai (wa.me link, naya tab me)
+
+3. Expiry Color-Coding (tiered)
+   - Red = 7 din se kam bacha (ya expired)
+   - Orange = 7-29 din bacha
+   - Green = 30+ din bacha (active/safe)
+   - Ye already Active/Expiring tables ke "Days Left" column me
+     dikhta hai
+
+PENDING (yeh kaam abhi baaki hai, kisi aur developer/session se
+karwaya ja sakta hai):
+   - Dashboard revenue/summary chart (active vs expired members ka
+     graph — Chart.js jaisi library add karke banaya ja sakta hai)
+   - Bulk actions (checkbox se multiple leads select karke ek saath
+     "Mark Contacted" ya "Delete" karna)
+   - Print member card / receipt (member ka ek printable PDF/HTML
+     card jisme naam, plan, expiry date ho)
 
 Is file ko update karte rahenge jaise-jaise phases complete honge.
