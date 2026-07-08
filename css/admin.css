@@ -85,6 +85,45 @@ header.admin-header {
   color: var(--ember);
 }
 
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 14px 28px;
+  font-family: var(--body);
+  font-weight: 700;
+  font-size: 13px;
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--ember);
+  color: var(--ink);
+  box-shadow: 0 4px 14px rgba(255, 90, 31, 0.18);
+}
+
+.btn-primary:hover {
+  background: var(--ember-2);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(255, 90, 31, 0.28);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-primary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
 /* Authentication Screen */
 .auth-container {
   flex: 1;

@@ -471,10 +471,8 @@ function renderLeads() {
     const cleanPhone = (lead.phone || '').replace(/\D/g, '');
     const firstName = (lead.name || '').trim().split(' ')[0];
     const waMessage = encodeURIComponent(
-      `Hi ${firstName}! This is Forge Fitness. Thank you for showing interest in our gym! ` +
-      `We'd love to have you join the Forge family great trainers, a solid community, and everything you need to hit your fitness goals.\n\n` +
-      `How was your experience during your visit? We'd love to hear your thoughts, and if you're ready, we can help you get started with a membership right away. ` +
-      `Let us know if you have any questions, we're here to help!`
+      `Hi ${firstName}, this is Forge Fitness. Thanks for trying us out! ` +
+      `How was your visit? Let us know if you'd like to join — we're happy to help you get started.`
     );
     const waLink = cleanPhone ? `https://wa.me/${cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone}?text=${waMessage}` : '#';
 
