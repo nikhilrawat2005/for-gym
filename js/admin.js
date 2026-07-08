@@ -467,6 +467,17 @@ function renderLeads() {
   leadsTableBody.innerHTML = filteredLeads.map(lead => {
     const date = lead.createdAt ? new Date(lead.createdAt.seconds * 1000).toLocaleDateString() : "Pending";
     const visitDate = lead.visitDate ? lead.visitDate : "Not Selected";
+
+    const cleanPhone = (lead.phone || '').replace(/\D/g, '');
+    const firstName = (lead.name || '').trim().split(' ')[0];
+    const waMessage = encodeURIComponent(
+      `Hi ${firstName}! 👋 This is Forge Fitness. Thank you for showing interest in our gym! ` +
+      `We'd love to have you join the Forge family — great trainers, a solid community, and everything you need to hit your fitness goals. 💪\n\n` +
+      `How was your experience during your visit? We'd love to hear your thoughts, and if you're ready, we can help you get started with a membership right away. ` +
+      `Let us know if you have any questions — we're here to help!`
+    );
+    const waLink = cleanPhone ? `https://wa.me/${cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone}?text=${waMessage}` : '#';
+
     return `
       <tr>
         <td>${date}</td>
@@ -477,7 +488,8 @@ function renderLeads() {
         <td>
           <span class="status-badge status-${lead.status.toLowerCase()}">${lead.status}</span>
         </td>
-        <td>
+        <td style="white-space: nowrap;">
+          ${cleanPhone ? `<a class="btn-remind" href="${waLink}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
           <select class="action-select" onchange="updateLeadStatus('${lead.id}', this.value)">
             <option value="New" ${lead.status === 'New' ? 'selected' : ''}>New</option>
             <option value="Contacted" ${lead.status === 'Contacted' ? 'selected' : ''}>Contacted</option>
