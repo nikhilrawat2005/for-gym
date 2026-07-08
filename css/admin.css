@@ -384,6 +384,95 @@ tr:hover td {
   border-color: var(--error);
 }
 
+/* Member Details Modal (Phase 3.1) */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.7);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.modal-overlay.open {
+  display: flex;
+}
+
+.modal-box {
+  background: var(--charcoal, #1a1a1a);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  max-width: 480px;
+  width: 100%;
+  padding: 32px;
+  position: relative;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+}
+
+.modal-close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.modal-close:hover {
+  color: var(--error);
+}
+
+.modal-title {
+  font-family: var(--display, inherit);
+  font-size: 24px;
+  margin-bottom: 20px;
+  color: var(--paper);
+  letter-spacing: 0.5px;
+}
+
+.modal-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.modal-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.modal-field.full {
+  grid-column: 1 / -1;
+}
+
+.modal-field span {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--muted);
+  font-weight: 700;
+}
+
+.modal-field strong {
+  font-size: 15px;
+  color: var(--paper);
+}
+
+.member-row {
+  cursor: pointer;
+}
+
+.member-row:hover {
+  background: var(--panel-2, rgba(255,255,255,0.03));
+}
+
 .btn-export {
   background: var(--panel);
   border: 1px solid var(--line);

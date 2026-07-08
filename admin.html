@@ -120,17 +120,14 @@
             <thead>
               <tr>
                 <th class="sortable" data-sort="name" data-target="active">Name</th>
-                <th class="sortable" data-sort="age" data-target="active">Age/Gender</th>
-                <th>Contact</th>
-                <th class="sortable" data-sort="startDate" data-target="active">Starting Date</th>
                 <th class="sortable" data-sort="duration" data-target="active">Duration</th>
-                <th class="sortable" data-sort="daysLeft" data-target="active">Days Left</th>
                 <th class="sortable" data-sort="fees" data-target="active">Fees</th>
+                <th class="sortable" data-sort="daysLeft" data-target="active">Days Left</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="activeMembersTableBody">
-              <tr><td colspan="8" class="empty-state">Loading members...</td></tr>
+              <tr><td colspan="5" class="empty-state">Loading members...</td></tr>
             </tbody>
           </table>
         </div>
@@ -155,17 +152,14 @@
             <thead>
               <tr>
                 <th class="sortable" data-sort="name" data-target="expiring">Name</th>
-                <th class="sortable" data-sort="age" data-target="expiring">Age/Gender</th>
-                <th>Contact</th>
-                <th class="sortable" data-sort="startDate" data-target="expiring">Starting Date</th>
                 <th class="sortable" data-sort="duration" data-target="expiring">Duration</th>
-                <th class="sortable" data-sort="daysLeft" data-target="expiring">Days Left</th>
                 <th class="sortable" data-sort="fees" data-target="expiring">Fees</th>
+                <th class="sortable" data-sort="daysLeft" data-target="expiring">Days Left</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody id="expiringMembersTableBody">
-              <tr><td colspan="8" class="empty-state">No members near plan end date.</td></tr>
+              <tr><td colspan="5" class="empty-state">No members near plan end date.</td></tr>
             </tbody>
           </table>
         </div>
@@ -274,6 +268,17 @@
 
     </section>
   </main>
+
+  <!-- MEMBER DETAILS MODAL (Phase 3.1) -->
+  <div class="modal-overlay" id="memberModalOverlay">
+    <div class="modal-box">
+      <button class="modal-close" id="memberModalClose">&times;</button>
+      <h2 class="modal-title" id="memberModalName">Member Name</h2>
+      <div class="modal-grid" id="memberModalBody">
+        <!-- filled dynamically by JS -->
+      </div>
+    </div>
+  </div>
 
   <!-- USER PORTAL SCREEN (Shown for normal users after login) -->
   <main id="userDashboardContainer" style="display: none; flex: 1; align-items: center; justify-content: center; padding: 40px 24px;">

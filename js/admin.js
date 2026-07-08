@@ -234,22 +234,16 @@ function memberRowHTML(member, daysLeft) {
   const waLink = cleanPhone ? `https://wa.me/${cleanPhone.length === 10 ? '91' + cleanPhone : cleanPhone}?text=${waMessage}` : '#';
 
   return `
-    <tr>
+    <tr class="member-row" data-id="${member.id}">
       <td class="lead-name">${escapeHTML(member.name)}</td>
-      <td>${member.age} / ${member.gender}</td>
-      <td>
-        <div class="lead-phone">${escapeHTML(member.phone)}</div>
-        <div style="font-size: 11px; color: var(--muted);">${escapeHTML(member.address || 'No address')}</div>
-      </td>
-      <td>${member.startDate}</td>
       <td>${member.duration} Month${member.duration > 1 ? 's' : ''}</td>
+      <td>₹${parseInt(member.fees).toLocaleString()}</td>
       <td>
         <span style="font-weight: 700; color: ${expiryColor}">
           ${daysLeft > 0 ? daysLeft + ' Days Left' : (daysLeft === 0 ? 'Expires Today' : 'Expired')}
         </span>
       </td>
-      <td>₹${parseInt(member.fees).toLocaleString()}</td>
-      <td style="white-space: nowrap;">
+      <td style="white-space: nowrap;" onclick="event.stopPropagation();">
         ${cleanPhone ? `<a class="btn-remind" href="${waLink}" target="_blank" rel="noopener">WhatsApp</a>` : ''}
         <button class="btn-delete" style="margin: 0;" onclick="deleteMember('${member.id}')">Remove</button>
       </td>
@@ -295,6 +289,7 @@ function sortMembers(list, state) {
 // Render members into Active vs Expiring (near end)
 let lastActiveList = [];
 let lastExpiringList = [];
+let memberLookup = {};
 
 function renderMembers() {
   const activeBody = document.getElementById("activeMembersTableBody");
@@ -304,6 +299,10 @@ function renderMembers() {
 
   // Attach computed daysLeft to every member once
   const withDaysLeft = members.map(m => ({ ...m, daysLeft: computeDaysLeft(m) }));
+
+  // Lookup map for modal detail view (Phase 3.1)
+  memberLookup = {};
+  withDaysLeft.forEach(m => { memberLookup[m.id] = m; });
 
   let activeList = withDaysLeft.filter(m => m.daysLeft >= 30);
   let expiringList = withDaysLeft.filter(m => m.daysLeft < 30);
@@ -585,6 +584,53 @@ document.querySelectorAll("th.sortable").forEach(th => {
       renderMembers();
     }
   });
+});
+
+// ===== PHASE 3.1: Member Details Modal =====
+const memberModalOverlay = document.getElementById("memberModalOverlay");
+const memberModalClose = document.getElementById("memberModalClose");
+const memberModalName = document.getElementById("memberModalName");
+const memberModalBody = document.getElementById("memberModalBody");
+
+function openMemberModal(member) {
+  if (!member) return;
+  memberModalName.textContent = member.name;
+
+  const expiryColor = member.daysLeft < 7 ? 'var(--error)' : (member.daysLeft < 30 ? '#f0a500' : 'var(--success)');
+  const daysLeftText = member.daysLeft > 0 ? member.daysLeft + ' Days Left' : (member.daysLeft === 0 ? 'Expires Today' : 'Expired');
+
+  memberModalBody.innerHTML = `
+    <div class="modal-field"><span>Age</span><strong>${member.age}</strong></div>
+    <div class="modal-field"><span>Gender</span><strong>${escapeHTML(member.gender)}</strong></div>
+    <div class="modal-field"><span>Phone</span><strong>${escapeHTML(member.phone)}</strong></div>
+    <div class="modal-field"><span>Fees Paid</span><strong>₹${parseInt(member.fees).toLocaleString()}</strong></div>
+    <div class="modal-field"><span>Start Date</span><strong>${member.startDate}</strong></div>
+    <div class="modal-field"><span>Duration</span><strong>${member.duration} Month${member.duration > 1 ? 's' : ''}</strong></div>
+    <div class="modal-field"><span>Days Left</span><strong style="color: ${expiryColor}">${daysLeftText}</strong></div>
+    <div class="modal-field full"><span>Address</span><strong>${escapeHTML(member.address || 'No address provided')}</strong></div>
+  `;
+
+  memberModalOverlay.classList.add("open");
+}
+
+function closeMemberModal() {
+  memberModalOverlay.classList.remove("open");
+}
+
+if (memberModalClose) memberModalClose.addEventListener("click", closeMemberModal);
+if (memberModalOverlay) {
+  memberModalOverlay.addEventListener("click", (e) => {
+    if (e.target === memberModalOverlay) closeMemberModal();
+  });
+}
+
+// Delegated click listener so it works even after table re-renders
+document.addEventListener("click", (e) => {
+  const row = e.target.closest(".member-row");
+  if (row) {
+    const id = row.getAttribute("data-id");
+    openMemberModal(memberLookup[id]);
+  }
 });
 
 // ===== PHASE 3: CSV Export =====
