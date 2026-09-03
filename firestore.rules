@@ -9,7 +9,9 @@ service cloud.firestore {
         if request.auth != null
         && request.auth.token.email in [
              'nikhil2005114@gmail.com',
-             'bhatt.yogesh0814@gmail.com'
+             'bhatt.yogesh0814@gmail.com',
+             'parthsingh1947@gmail.com',
+             'nishantkumar0123.jeh@gmail.com'
            ];
     }
 
@@ -19,7 +21,9 @@ service cloud.firestore {
         if request.auth != null
         && request.auth.token.email in [
              'nikhil2005114@gmail.com',
-             'bhatt.yogesh0814@gmail.com'
+             'bhatt.yogesh0814@gmail.com',
+             'parthsingh1947@gmail.com',
+             'nishantkumar0123.jeh@gmail.com'
            ];
     }
   }

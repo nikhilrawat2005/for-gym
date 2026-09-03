@@ -733,11 +733,37 @@ th.sortable.sort-desc::after {
 @media(max-width: 900px) {
   #dashboardContainer.dashboard-container {
     flex-direction: column;
+    padding: 24px 16px;
   }
   .admin-sidebar {
     width: 100%;
     position: relative;
     top: 0;
+  }
+  .dashboard-stats {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+@media(max-width: 600px) {
+  .dashboard-stats {
+    grid-template-columns: 1fr;
+  }
+  .table-controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+  .search-wrapper {
+    max-width: 100%;
+  }
+  .filter-wrapper {
+    flex-wrap: wrap;
+  }
+  .btn-export {
+    margin-left: 0;
+    width: 100%;
+    text-align: center;
   }
 }
 
@@ -745,4 +771,62 @@ th.sortable.sort-desc::after {
 #userDashboardContainer {
   flex: 1;
   min-height: calc(100vh - 80px);
+}
+
+/* Toast Notifications */
+.admin-toast {
+  position: fixed;
+  bottom: 28px;
+  right: 28px;
+  z-index: 10000;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--paper);
+  padding: 14px 22px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 600;
+  box-shadow: 0 14px 40px rgba(0,0,0,0.6);
+  opacity: 0;
+  transform: translateY(16px) scale(0.96);
+  pointer-events: none;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-toast.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+.admin-toast.success {
+  border-left: 4px solid var(--success);
+  color: var(--paper);
+}
+
+.admin-toast.error {
+  border-left: 4px solid var(--error);
+  color: #ff9890;
+}
+
+/* Smooth custom scrollbars for dark UI */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(244, 239, 228, 0.15);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ember);
 }

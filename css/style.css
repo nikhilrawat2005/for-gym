@@ -364,3 +364,22 @@ a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible{
 @media (prefers-reduced-motion: reduce){
   *{animation-duration:0.01ms !important;transition-duration:0.01ms !important;}
 }
+
+/* Smooth custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--ink);
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(244, 239, 228, 0.16);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ember);
+}

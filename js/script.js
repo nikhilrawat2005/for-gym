@@ -1,7 +1,12 @@
 // ============================================================
 // AUTH — Nav Sign-In / User State
 // ============================================================
-const ADMIN_EMAIL = "nikhil2005114@gmail.com";
+const ADMIN_EMAILS = [
+  "nikhil2005114@gmail.com",
+  "bhatt.yogesh0814@gmail.com",
+  "parthsingh1947@gmail.com",
+  "nishantkumar0123.jeh@gmail.com"
+];
 
 const navSignInBtn    = document.getElementById('navSignInBtn');
 const navAdminLink    = document.getElementById('navAdminLink');
@@ -78,7 +83,7 @@ auth.onAuthStateChanged((user) => {
     return;
   }
 
-  if (user.email === ADMIN_EMAIL) {
+  if (ADMIN_EMAILS.includes(user.email)) {
     // Admin → show Admin Panel link
     navAdminLink.style.display  = 'inline-flex';
     navSignOutBtn.style.display = 'block';

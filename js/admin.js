@@ -2,7 +2,9 @@
 // List of admin emails allowed to access the dashboard (add more here as needed)
 const AUTHORIZED_EMAILS = [
   "nikhil2005114@gmail.com",
-  "bhatt.yogesh0814@gmail.com"
+  "bhatt.yogesh0814@gmail.com",
+  "parthsingh1947@gmail.com",
+  "nishantkumar0123.jeh@gmail.com"
 ];
 
 // DOM Elements
@@ -115,11 +117,33 @@ function showError(msg) {
   errorMessage.style.display = "block";
 }
 
+// Toast notification for smooth feedback
+function showToast(message, type = 'success') {
+  let toast = document.getElementById('adminToast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'adminToast';
+    toast.className = 'admin-toast';
+    document.body.appendChild(toast);
+  }
+  toast.className = `admin-toast ${type} show`;
+  toast.innerHTML = (type === 'success' ? '✓ ' : '✕ ') + escapeHTML(message);
+  clearTimeout(window._toastTimeout);
+  window._toastTimeout = setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3200);
+}
+
 function showAdminDashboard() {
   authContainer.style.display = "none";
   userDashboardContainer.style.display = "none";
   dashboardContainer.style.display = "flex"; // flex for sidebar layout
   adminHeader.style.display = "block";
+  // Default start date to today in form
+  const startDateInput = document.getElementById("mStartDate");
+  if (startDateInput && !startDateInput.value) {
+    startDateInput.value = new Date().toISOString().slice(0, 10);
+  }
 }
 
 function showUserDashboard(user) {
@@ -383,18 +407,22 @@ if (addMemberForm) {
 
       memberFormNote.style.color = "var(--success)";
       memberFormNote.textContent = "Member registered successfully!";
+      showToast(`Member "${name}" registered successfully!`, "success");
       addMemberForm.reset();
+      const startDateInput = document.getElementById("mStartDate");
+      if (startDateInput) startDateInput.value = new Date().toISOString().slice(0, 10);
       
-      // Switch to active members list tab
+      // Switch to active members list tab smoothly
       setTimeout(() => {
         const activeTabBtn = document.querySelector('[data-tab="active-members"]');
         if (activeTabBtn) activeTabBtn.click();
         memberFormNote.textContent = "";
-      }, 1500);
+      }, 1000);
     } catch (error) {
       console.error("Error registering member:", error);
       memberFormNote.style.color = "var(--error)";
       memberFormNote.textContent = "Failed to register member. Check Firestore rules.";
+      showToast("Failed to register member.", "error");
     } finally {
       const submitBtn = addMemberForm.querySelector('button[type="submit"]');
       submitBtn.disabled = false;
@@ -408,9 +436,10 @@ window.deleteMember = async function(id) {
   if (confirm("Are you sure you want to remove this member?")) {
     try {
       await db.collection("members").doc(id).delete();
+      showToast("Member removed successfully.", "success");
     } catch (error) {
       console.error("Error removing member:", error);
-      alert("Failed to remove member. Check permissions.");
+      showToast("Failed to remove member.", "error");
     }
   }
 };
@@ -506,9 +535,10 @@ window.updateLeadStatus = async function(id, newStatus) {
     await db.collection("leads").doc(id).update({
       status: newStatus
     });
+    showToast(`Lead status updated to ${newStatus}`, "success");
   } catch (error) {
     console.error("Error updating lead status:", error);
-    alert("Failed to update status. Make sure rules permit this.");
+    showToast("Failed to update status.", "error");
   }
 };
 
@@ -517,9 +547,10 @@ window.deleteLead = async function(id) {
   if (confirm("Are you sure you want to delete this registration?")) {
     try {
       await db.collection("leads").doc(id).delete();
+      showToast("Registration deleted.", "success");
     } catch (error) {
       console.error("Error deleting lead:", error);
-      alert("Failed to delete lead. Check permissions.");
+      showToast("Failed to delete lead.", "error");
     }
   }
 };
